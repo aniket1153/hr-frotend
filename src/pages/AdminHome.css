@@ -1,0 +1,65 @@
+.admin-container {
+  text-align: center;
+  padding: 80px 20px;
+  background-color: #eaf3f5;
+  min-height: 100vh;
+}
+
+.admin-container h1 {
+  color: #035d5b;
+  font-size: 40px; /* Increased from 32px */
+  margin-bottom: 60px; /* Slightly more spacing */
+}
+
+.admin-options {
+  display: flex;
+  justify-content: center;
+  gap: 120px; /* More spacing between cards */
+  flex-wrap: wrap; /* Makes it responsive */
+}
+
+.admin-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.3s;
+  width: 180px; /* Set card width for consistency */
+}
+
+.admin-card:hover {
+  transform: scale(1.08); /* Slightly more hover effect */
+}
+
+.icon-circle {
+  width: 150px; /* Increased from 120px */
+  height: 150px;
+  background-color: #007b7a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-card h3 {
+  margin-top: 20px;
+  color: #007b7a;
+  font-weight: bold;
+  font-size: 22px; /* Increased from 18px */
+}
+.logout-btn {
+  margin-top: 60px;
+  padding: 12px 30px;
+  background-color: #007b7a;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #004d4b;
+}

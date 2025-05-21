@@ -1,0 +1,49 @@
+.placement-container {
+  padding: 40px;
+  background-color: #eaf3f5;
+  min-height: 100vh;
+  text-align: center;
+}
+
+.placement-heading {
+  background-color: #007b7a;
+  color: white;
+  display: inline-block;
+  padding: 10px 30px;
+  border-radius: 6px;
+  font-size: 24px;
+  margin-bottom: 40px;
+}
+
+.placement-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 250px);
+  justify-content: center;
+  gap: 20px;
+}
+
+.placement-btn {
+  background-color: #007b7a;
+  color: white;
+  border: none;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.placement-btn:hover {
+  background-color: #005f5f;
+}
+
+@media (max-width: 600px) {
+  .placement-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .placement-btn {
+    width: 100%;
+  }
+}

@@ -1,0 +1,200 @@
+
+.add-company-container {
+  background-color: #eaf3f5;
+  padding: 40px 30px;
+  max-width: 700px;
+  margin: 40px auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.add-company-container h2 {
+  background-color: #007b7a;
+  color: #ffffff;
+  padding: 12px 25px;
+  display: inline-block;
+  border-radius: 6px;
+  margin-bottom: 25px;
+  font-weight: 600;
+  font-size: 1.8rem;
+}
+
+.company-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* 3-column grid: label | colon | input */
+.form-grid {
+  display: grid;
+  grid-template-columns: 160px 10px 1fr;
+  row-gap: 18px;
+  column-gap: 12px;
+  align-items: center;
+}
+
+.form-grid label {
+  font-weight: 700;
+  color: #004b4b;
+}
+
+.form-grid span {
+  font-weight: 700;
+  color: #004b4b;
+  justify-self: center;
+}
+
+.form-grid input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.form-grid input:focus {
+  border-color: #007b7a;
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 123, 122, 0.3);
+}
+
+/* Reuse existing styles for rows below */
+.form-row label {
+  font-weight: 700;
+  color: #004b4b;
+  margin-bottom: 6px;
+}
+
+/* Keep rest of previous CSS (positions, buttons, media queries) unchanged */
+
+
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-row label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+}
+
+.form-row input,
+.form-row textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 1rem;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.form-row input:focus,
+.form-row textarea:focus {
+  border-color: #007b7a;
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 123, 122, 0.3);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-row.two-columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.form-row.two-columns > div {
+  flex: 1 1 45%;
+}
+
+.position-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.position-row input[type="text"],
+.position-row input[type="date"] {
+  flex: 1 1 45%;
+  min-width: 140px;
+}
+
+.position-row button {
+  flex-shrink: 0;
+  background-color: #d9534f;
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.position-row button:hover {
+  background-color: #c9302c;
+}
+
+.add-position-btn {
+  background-color: #007b7a;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  width: fit-content;
+  margin-top: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.add-position-btn:hover {
+  background-color: #005f5f;
+}
+
+button[type="submit"] {
+  background-color: #007b7a;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+button[type="submit"]:hover {
+  background-color: #005f5f;
+}
+
+@media (max-width: 600px) {
+  .form-row.two-columns > div {
+    flex: 1 1 100%;
+  }
+
+  .position-row input[type="text"],
+  .position-row input[type="date"] {
+    flex: 1 1 100%;
+  }
+
+  .position-row button {
+    width: 100%;
+    margin-top: 6px;
+  }
+}

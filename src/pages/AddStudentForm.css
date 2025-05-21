@@ -1,0 +1,95 @@
+
+.add-student-container {
+  background-color: #eaf3f5;
+  padding: 40px 30px;
+  max-width: 700px;
+  margin: 40px auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.add-student-container h2 {
+  background-color: #007b7a;
+  color: #ffffff;
+  padding: 12px 25px;
+  display: inline-block;
+  border-radius: 6px;
+  margin-bottom: 25px;
+  font-weight: 600;
+  font-size: 1.8rem;
+}
+
+.student-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* 3-column grid: label | colon | input */
+.form-grid {
+  display: grid;
+  grid-template-columns: 160px 10px 1fr;
+  row-gap: 18px;
+  column-gap: 12px;
+  align-items: center;
+}
+
+.form-grid label {
+  font-weight: 700;
+  color: #004b4b;
+}
+
+.form-grid span {
+  font-weight: 700;
+  color: #004b4b;
+  justify-self: center;
+}
+
+.form-grid input,
+.form-grid select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.form-grid input:focus,
+.form-grid select:focus {
+  border-color: #007b7a;
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 123, 122, 0.3);
+}
+
+button[type="submit"] {
+  background-color: #007b7a;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+button[type="submit"]:hover {
+  background-color: #005f5f;
+}
+
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    row-gap: 12px;
+  }
+
+  .form-grid label,
+  .form-grid span {
+    justify-self: start;
+  }
+}
