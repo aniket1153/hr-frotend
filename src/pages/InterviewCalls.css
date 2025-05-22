@@ -1,61 +1,103 @@
 .interview-calls-container {
   background-color: #eaf3f5;
-  padding: 40px;
+  padding: 30px;
   margin: auto;
-  max-width: 1200px;
+  max-width: 1000px;
   border-radius: 10px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .interview-calls-container h1 {
   background-color: #007b7a;
   color: white;
-  padding: 10px 20px;
+  padding: 12px 24px;
   border-radius: 6px;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  font-size: 28px;
 }
 
+/* Table Styling */
 .interview-calls-table {
   width: 100%;
   border-collapse: collapse;
+  border: 2px solid #007b7a;
 }
 
 .interview-calls-table th,
 .interview-calls-table td {
   padding: 12px;
-  text-align: left;
-  border: 1px solid #ddd;
+  text-align: center;
+  border: 1px solid #007b7a;
+  font-size: 16px;
 }
 
 .interview-calls-table th {
   background-color: #007b7a;
   color: white;
+  font-weight: bold;
 }
 
-.interview-calls-table tr:nth-child(even) {
-  background-color: #f2f2f2;
+.interview-calls-table td {
+  background-color: white;
 }
 
-.interview-calls-table tr:hover {
-  background-color: #d9f2f2;
+.interview-calls-table tr:nth-child(even) td {
+  background-color: #f2f9f9;
 }
+
 /* View button styling */
-.interview-calls-table .view-button {
+.view-button {
   display: inline-block;
   background-color: #007b7a;
   color: white;
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 6px 14px;
+  border-radius: 5px;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 500;
+  font-size: 14px;
   transition: background-color 0.2s ease;
 }
 
-.interview-calls-table .view-button:hover {
+.view-button:hover {
   background-color: #005f5f;
 }
 
+/* Company Section Box */
+.company-section {
+  margin-bottom: 30px;
+  border: 2px solid #007b7a;
+  border-radius: 6px;
+  padding: 20px;
+  background-color: #ffffff;
+}
 
+.company-section h2 {
+  margin-bottom: 20px;
+  color: #007b7a;
+  font-size: 22px;
+  border-bottom: 2px solid #007b7a;
+  padding-bottom: 8px;
+}
+
+/* Refresh Button */
+.refresh-button {
+  background-color: #007b7a;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.refresh-button:hover {
+  background-color: #005f5f;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .interview-calls-container {
     padding: 20px;

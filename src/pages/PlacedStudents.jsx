@@ -12,7 +12,13 @@ function PlacedStudents() {
   const [dateTo, setDateTo] = useState("");
 
   useEffect(() => {
-  fetch("/api/students/placed")  // <-- updated URL here
+    const token = localStorage.getItem("token")
+  fetch("http://localhost:5000/api/students/placed",{
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`, // Add token here
+    },
+  }) 
     .then((res) => {
       if (!res.ok) throw new Error("Failed to fetch placed students");
       return res.json();

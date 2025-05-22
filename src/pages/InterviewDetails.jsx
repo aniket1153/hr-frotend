@@ -1,171 +1,194 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
-import "./InterviewDetails.css";
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import './InterviewDetails.css';
 
-const InterviewDetails = () => {
+const InterviewDetail = () => {
   const { id } = useParams();
-  const [interview, setInterview] = useState(null);
+  const [company, setCompany] = useState(null);
+  const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [searchApplied, setSearchApplied] = useState('');
+  const [searchShortlisted, setSearchShortlisted] = useState('');
+  const [searchPlaced, setSearchPlaced] = useState('');
+
   useEffect(() => {
-    const fetchInterviewDetails = async () => {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        setError("❌ Authentication token missing. Please login.");
-        setLoading(false);
-        return;
-      }
-
+    const fetchCompanyAndStudents = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/interview-calls/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const token = localStorage.getItem('token');
+
+        const companyRes = await axios.get(`http://localhost:5000/api/companies/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const companyData = companyRes.data;
+        setCompany(companyData);
+
+        const studentRes = await axios.get('http://localhost:5000/api/students', {
+          headers: { Authorization: `Bearer ${token}` },
         });
 
-        setInterview(response.data);
-        setError(null);
-        setLoading(false);
+        setStudents(studentRes.data);
       } catch (err) {
-        console.error("API error:", err);
-        setError("⚠️ Failed to load interview details.");
+        console.error(err);
+        setError('Failed to load interview details.');
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchInterviewDetails();
-    const intervalId = setInterval(fetchInterviewDetails, 10000);
-    return () => clearInterval(intervalId);
+    fetchCompanyAndStudents();
   }, [id]);
 
-  if (loading) return <p className="loading">Loading interview details...</p>;
-  if (error) return <p className="error">{error}</p>;
-  if (!interview) return <p className="error">Interview not found</p>;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="error-msg">{error}</p>;
+  if (!company) return <p>No company found.</p>;
+
+  // Normalize values
+  const companyName = company.companyName;
+
+  const appliedStudents = students.filter(
+    s => s.appliedCompany === companyName && s.status?.toLowerCase() === 'applied'
+  );
+  const shortlistedStudents = students.filter(
+    s => s.appliedCompany === companyName && s.status?.toLowerCase() === 'shortlisted'
+  );
+  const placedStudents = students.filter(
+    s => s.appliedCompany === companyName && s.status?.toLowerCase() === 'placed'
+  );
+
+  // Calculate resumes sent count based on students applied to this company
+  const resumesSentCount = students.filter(s => s.appliedCompany === companyName).length;
+
+  // Submit handler for sending report data
+  const handleSubmitReport = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const reportData = {
+        companyId: company._id,
+        appliedCount: appliedStudents.length,
+        shortlistedCount: shortlistedStudents.length,
+        placedCount: placedStudents.length,
+        resumesSent: resumesSentCount,
+      };
+
+      await axios.post('http://localhost:5000/api/reports', reportData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      alert('Report submitted successfully!');
+    } catch (err) {
+      console.error(err);
+      alert('Failed to submit report');
+    }
+  };
 
   return (
-    <div className="interview-details-page">
-      <div className="header-row">
-        <h2>Interview Details</h2>
-        <div className="header-info">
-          <span className="company-name">{interview.companyId?.companyName || "N/A"}</span>
-          <span className="interview-date">
-            {interview.interviewDate ? new Date(interview.interviewDate).toLocaleDateString() : "N/A"}
-          </span>
+    <div className="interview-container">
+      <div className="header">Interview Details</div>
+
+      <div className="company-details">
+        <div><strong>Company :</strong> {companyName}</div>
+        <div><strong>Date :</strong> {new Date(company.lastOpeningDate).toLocaleDateString()}</div>
+      </div>
+
+      <div className="job-details">
+        <strong>Job Details :</strong> {company.position}
+      </div>
+
+      <div className="job-description">
+        The candidate should have basic knowledge of MongoDB, Express.js, React.js, and Node.js,
+        along with a good understanding of JavaScript, HTML, and CSS. This is a great opportunity to
+        work on real-time projects, learn from experienced developers, and grow your career in
+        full-stack development.
+      </div>
+
+      <div className="summary-boxes">
+        <div className="box">
+          <h2>{company.requirements || '00'}</h2>
+          <span>Requirements</span>
+        </div>
+        <div className="box">
+          <h2>{resumesSentCount || '00'}</h2> {/* Updated count here */}
+          <span>Resumes Sent</span>
         </div>
       </div>
 
-      <div className="section">
-        <h3>Job Details</h3>
-        <p className="job-desc">{interview.description || "No description available."}</p>
-      </div>
-
-      <div className="stats-row">
-        <div className="stat-box">
-          <strong>Requirements</strong>
-          <span>{interview.requirementsCount || 0}</span>
-        </div>
-        <div className="stat-box">
-          <strong>Resumes Sent</strong>
-          <span>{interview.resumes?.length || 0}</span>
-        </div>
-      </div>
-
-      <div className="section">
-        <h3>Applied Students</h3>
-        <table className="applied-table">
-          <thead>
-            <tr>
-              <th>Sr.No.</th>
-              <th>Name</th>
-              <th>Contact</th>
-              <th>Email</th>
-              <th>Resume</th>
-            </tr>
-          </thead>
-          <tbody>
-            {interview.resumes?.length > 0 ? (
-              interview.resumes.map((item, idx) => (
-                <tr key={item.student?._id || idx}>
-                  <td>{idx + 1}</td>
-                  <td>{item.student?.name || "N/A"}</td>
-                  <td>{item.student?.contact || "N/A"}</td>
-                  <td>{item.student?.email || "N/A"}</td>
-                  <td>
-                    {item.resumeUrl ? (
-                      <a href={item.resumeUrl} target="_blank" rel="noopener noreferrer">View Resume</a>
-                    ) : (
-                      "Not Uploaded"
-                    )}
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5">No students applied.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="two-tables-row">
-        <div className="sub-section">
-          <h4>Shortlisted Students</h4>
-          <table className="simple-table">
+      <div className="lists-container">
+        <div className="list">
+          <h4>Applied Students ▼</h4>
+          <input
+            type="text"
+            placeholder="Search Student"
+            value={searchApplied}
+            onChange={(e) => setSearchApplied(e.target.value)}
+          />
+          <table>
             <thead>
-              <tr>
-                <th>Sr.No.</th>
-                <th>Name</th>
-              </tr>
+              <tr><th>SrNo</th><th>Name</th></tr>
             </thead>
             <tbody>
-              {interview.shortlisted?.length > 0 ? (
-                interview.shortlisted.map((student, idx) => (
-                  <tr key={student._id}>
-                    <td>{idx + 1}</td>
-                    <td>{student.name}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="2">No shortlisted students.</td>
-                </tr>
-              )}
+              {appliedStudents
+                .filter(s => s.name?.toLowerCase().includes(searchApplied.toLowerCase()))
+                .map((student, i) => (
+                  <tr key={student._id}><td>{`0${i + 1}`}</td><td>{student.name}</td></tr>
+                ))}
             </tbody>
           </table>
         </div>
 
-        <div className="sub-section">
-          <h4>Placed Students</h4>
-          <table className="simple-table">
+        <div className="list">
+          <h4>Shortlisted Students ▼</h4>
+          <input
+            type="text"
+            placeholder="Search Student"
+            value={searchShortlisted}
+            onChange={(e) => setSearchShortlisted(e.target.value)}
+          />
+          <table>
             <thead>
-              <tr>
-                <th>Sr.No.</th>
-                <th>Name</th>
-              </tr>
+              <tr><th>SrNo</th><th>Name</th></tr>
             </thead>
             <tbody>
-              {interview.placed?.length > 0 ? (
-                interview.placed.map((student, idx) => (
-                  <tr key={student._id || student.studentId}>
-                    <td>{idx + 1}</td>
-                    <td>{student.name}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="2">No placed students.</td>
-                </tr>
-              )}
+              {shortlistedStudents
+                .filter(s => s.name?.toLowerCase().includes(searchShortlisted.toLowerCase()))
+                .map((student, i) => (
+                  <tr key={student._id}><td>{`0${i + 1}`}</td><td>{student.name}</td></tr>
+                ))}
             </tbody>
           </table>
         </div>
+
+        <div className="list">
+          <h4>Placed Students ▼</h4>
+          <input
+            type="text"
+            placeholder="Search Student"
+            value={searchPlaced}
+            onChange={(e) => setSearchPlaced(e.target.value)}
+          />
+          <table>
+            <thead>
+              <tr><th>SrNo</th><th>Name</th></tr>
+            </thead>
+            <tbody>
+              {placedStudents
+                .filter(s => s.name?.toLowerCase().includes(searchPlaced.toLowerCase()))
+                .map((student, i) => (
+                  <tr key={student._id}><td>{`0${i + 1}`}</td><td>{student.name}</td></tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Submit button below the lists */}
+      <div style={{ marginTop: '20px' }}>
+        <button onClick={handleSubmitReport}>Submit Report</button>
       </div>
     </div>
   );
 };
 
-export default InterviewDetails;
+export default InterviewDetail;

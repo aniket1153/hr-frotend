@@ -3,11 +3,24 @@ import axios from 'axios';
 import './ViewStudents.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
-const statusOptions = ["Applied", "Shortlisted", "Rejected", "On Hold", "Others"];
+const statusOptions = ["Applied", "Shortlisted", "Rejected", "On Hold", "Placed","Others" ];
 
 const ViewStudents = () => {
   const [students, setStudents] = useState([]);
+
+
+// inside ViewStudents component
+const navigate = useNavigate();
+
+// When clicking or selecting a company
+const handleOpenInterviewDetails = (companyId) => {
+  navigate(`/interview/${companyId}`, {
+    state: { students }
+  });
+};
+
 
   const fetchStudents = async () => {
     try {
