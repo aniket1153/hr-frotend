@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './AddCompany.css';
-import axios from 'axios';
+import axiosInstance from '../axiosInstance'; 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -44,34 +44,69 @@ const AddCompany = () => {
     setFormData({ ...formData, positions: newPositions });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:5000/api/companies', formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const token = localStorage.getItem('token');
 
-      if (response.status === 201) {
-        toast.success('Company added successfully!');
-        setFormData({
-          companyName: '',
-          hrName: '',
-          contact: '',
-          email: '',
-          location: '',
-          platform: '',
-          other: '',
-          companyHistory: '',
-          positions: [{ positionName: '', openingDate: '' }],
-          lastOpeningDate: '',
-        });
-      }
-    } catch (error) {
-      console.error('Error adding company:', error);
-      toast.error(`Failed to add company. ${error?.response?.data?.message || ''}`);
+    // ✅ Use axiosInstance instead of axios
+    const response = await axiosInstance.post('/api/companies', formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.status === 201) {
+      toast.success('Company added successfully!');
+      setFormData({
+        companyName: '',
+        hrName: '',
+        contact: '',
+        email: '',
+        location: '',
+        platform: '',
+        other: '',
+        companyHistory: '',
+        positions: [{ positionName: '', openingDate: '' }],
+        lastOpeningDate: '',
+      });
     }
-  };
+  } catch (error) {
+    console.error('Error adding company:', error);
+    toast.error(`Failed to add company. ${error?.response?.data?.message || ''}`);
+  }
+};
+
+
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const token = localStorage.getItem('token');
+  //     const response = await axios.post('http://localhost:5000/api/companies', formData, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+
+  //     if (response.status === 201) {
+  //       toast.success('Company added successfully!');
+  //       setFormData({
+  //         companyName: '',
+  //         hrName: '',
+  //         contact: '',
+  //         email: '',
+  //         location: '',
+  //         platform: '',
+  //         other: '',
+  //         companyHistory: '',
+  //         positions: [{ positionName: '', openingDate: '' }],
+  //         lastOpeningDate: '',
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error('Error adding company:', error);
+  //     toast.error(`Failed to add company. ${error?.response?.data?.message || ''}`);
+  //   }
+  // };
 
   return (
     <div className="add-company-container">

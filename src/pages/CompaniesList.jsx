@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../axiosInstance'; // Adjust the path based on your folder structure
 import { useNavigate } from 'react-router-dom';
 import './CompaniesList.css';
 
@@ -18,7 +18,7 @@ const CompaniesList = () => {
       return;
     }
 
-    axios.get('http://localhost:5000/api/companies', {
+    axiosInstance.get('/api/companies', {
       headers: {
         Authorization: `Bearer ${token}`
       }

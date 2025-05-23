@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../axiosInstance'; 
 import './CompanyDetails.css';
 
 const CompanyDetails = () => {
@@ -20,7 +20,7 @@ const CompanyDetails = () => {
       }
 
       try {
-        const response = await axios.get(`http://localhost:5000/api/companies/${id}`, {
+        const response = await axiosInstance.get(`/api/companies/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

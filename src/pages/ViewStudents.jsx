@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../axiosInstance'; 
 import './ViewStudents.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -29,7 +29,7 @@ const handleOpenInterviewDetails = (companyId) => {
         toast.error("You are not logged in. Please login first.");
         return;
       }
-      const response = await axios.get('http://localhost:5000/api/students', {
+      const response = await axiosInstance .get('/api/students', {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -53,8 +53,8 @@ const handleOpenInterviewDetails = (companyId) => {
         toast.error("You are not logged in. Please login first.");
         return;
       }
-      const response = await axios.patch(
-        `http://localhost:5000/api/students/${student._id}`,
+      const response = await axiosInstance .patch(
+        `/api/students/${student._id}`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -83,7 +83,7 @@ const handleOpenInterviewDetails = (companyId) => {
         toast.error("You are not logged in. Please login first.");
         return;
       }
-      await axios.delete(`http://localhost:5000/api/students/${id}`, {
+      await axiosInstance .delete(`/api/students/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

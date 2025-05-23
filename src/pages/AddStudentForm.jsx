@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './AddStudentForm.css';
+import axiosInstance from '../axiosInstance';  // use your axios instance here
 
 const AddStudent = () => {
   const [formData, setFormData] = useState({
@@ -20,7 +20,7 @@ const AddStudent = () => {
     const fetchCompanies = async () => {
       try {
         const token = localStorage.getItem('token');
-        const { data } = await axios.get('http://localhost:5000/api/companies', {
+        const { data } = await axiosInstance.get('/api/companies', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setCompanies(Array.isArray(data) ? data : []);
@@ -30,9 +30,6 @@ const AddStudent = () => {
       }
     };
     fetchCompanies();
-
-    // Test toast on mount to verify it works
-    // toast.info('AddStudent component loaded');
   }, []);
 
   const handleChange = (e) => {
@@ -48,7 +45,7 @@ const AddStudent = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/students', formData, {
+      await axiosInstance.post('/api/students', formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Student added successfully!');
@@ -161,7 +158,6 @@ const AddStudent = () => {
         <button type="submit">Submit</button>
       </form>
 
-      {/* ToastContainer to display notifications */}
       <ToastContainer
         position="top-center"
         autoClose={3000}

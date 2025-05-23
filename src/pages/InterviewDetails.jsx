@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../axiosInstance';  // <-- Use axiosInstance here
 import './InterviewDetails.css';
 
 const InterviewDetail = () => {
@@ -19,16 +19,15 @@ const InterviewDetail = () => {
       try {
         const token = localStorage.getItem('token');
 
-        const companyRes = await axios.get(`http://localhost:5000/api/companies/${id}`, {
+        // Use axiosInstance with baseURL 'http://localhost:5000/api'
+        const companyRes = await axiosInstance.get(`/api/companies/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        const companyData = companyRes.data;
-        setCompany(companyData);
+        setCompany(companyRes.data);
 
-        const studentRes = await axios.get('http://localhost:5000/api/students', {
+        const studentRes = await axiosInstance.get('/api/students', {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         setStudents(studentRes.data);
       } catch (err) {
         console.error(err);
@@ -45,23 +44,20 @@ const InterviewDetail = () => {
   if (error) return <p className="error-msg">{error}</p>;
   if (!company) return <p>No company found.</p>;
 
-  // Normalize values
   const companyName = company.companyName;
 
   const appliedStudents = students.filter(
-    s => s.appliedCompany === companyName && s.status?.toLowerCase() === 'applied'
+    (s) => s.appliedCompany === companyName && s.status?.toLowerCase() === 'applied'
   );
   const shortlistedStudents = students.filter(
-    s => s.appliedCompany === companyName && s.status?.toLowerCase() === 'shortlisted'
+    (s) => s.appliedCompany === companyName && s.status?.toLowerCase() === 'shortlisted'
   );
   const placedStudents = students.filter(
-    s => s.appliedCompany === companyName && s.status?.toLowerCase() === 'placed'
+    (s) => s.appliedCompany === companyName && s.status?.toLowerCase() === 'placed'
   );
 
-  // Calculate resumes sent count based on students applied to this company
-  const resumesSentCount = students.filter(s => s.appliedCompany === companyName).length;
+  const resumesSentCount = students.filter((s) => s.appliedCompany === companyName).length;
 
-  // Submit handler for sending report data
   const handleSubmitReport = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -73,7 +69,7 @@ const InterviewDetail = () => {
         resumesSent: resumesSentCount,
       };
 
-      await axios.post('http://localhost:5000/api/reports', reportData, {
+      await axiosInstance.post('/api/reports', reportData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -110,7 +106,7 @@ const InterviewDetail = () => {
           <span>Requirements</span>
         </div>
         <div className="box">
-          <h2>{resumesSentCount || '00'}</h2> {/* Updated count here */}
+          <h2>{resumesSentCount || '00'}</h2>
           <span>Resumes Sent</span>
         </div>
       </div>
@@ -130,7 +126,7 @@ const InterviewDetail = () => {
             </thead>
             <tbody>
               {appliedStudents
-                .filter(s => s.name?.toLowerCase().includes(searchApplied.toLowerCase()))
+                .filter((s) => s.name?.toLowerCase().includes(searchApplied.toLowerCase()))
                 .map((student, i) => (
                   <tr key={student._id}><td>{`0${i + 1}`}</td><td>{student.name}</td></tr>
                 ))}
@@ -152,7 +148,7 @@ const InterviewDetail = () => {
             </thead>
             <tbody>
               {shortlistedStudents
-                .filter(s => s.name?.toLowerCase().includes(searchShortlisted.toLowerCase()))
+                .filter((s) => s.name?.toLowerCase().includes(searchShortlisted.toLowerCase()))
                 .map((student, i) => (
                   <tr key={student._id}><td>{`0${i + 1}`}</td><td>{student.name}</td></tr>
                 ))}
@@ -174,7 +170,7 @@ const InterviewDetail = () => {
             </thead>
             <tbody>
               {placedStudents
-                .filter(s => s.name?.toLowerCase().includes(searchPlaced.toLowerCase()))
+                .filter((s) => s.name?.toLowerCase().includes(searchPlaced.toLowerCase()))
                 .map((student, i) => (
                   <tr key={student._id}><td>{`0${i + 1}`}</td><td>{student.name}</td></tr>
                 ))}
@@ -183,7 +179,6 @@ const InterviewDetail = () => {
         </div>
       </div>
 
-      {/* Submit button below the lists */}
       <div style={{ marginTop: '20px' }}>
         <button onClick={handleSubmitReport}>Submit Report</button>
       </div>

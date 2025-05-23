@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // <-- Import here
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../axiosInstance';  // make sure path is correct
 import './InterviewCalls.css';
 
 const InterviewCalls = () => {
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // <-- Initialize here
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -18,7 +18,7 @@ const InterviewCalls = () => {
       return;
     }
 
-    axios.get('http://localhost:5000/api/companies', {
+    axiosInstance.get('/api/companies', {  // no need for full URL, axiosInstance adds baseURL
       headers: {
         Authorization: `Bearer ${token}`
       }
