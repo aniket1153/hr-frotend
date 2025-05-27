@@ -22,12 +22,14 @@ const AdminHome = () => {
           </div>
           <h3>Placement</h3>
         </div>
-        <div className="admin-card" onClick={() => navigate('/recruitment')}>
-          <div className="icon-circle">
-            <FaUsers size={50} color="white" />
-          </div>
-          <h3>Recruitment</h3>
-        </div>
+        <div className="admin-card" onClick={() => window.open('https://hr-frotend-nine.vercel.app/', '_blank')}>
+
+  <div className="icon-circle">
+    <FaUsers size={50} color="white" />
+  </div>
+  <h3>Recruitment</h3>
+</div>
+
       </div>
 
       {/* Logout button */}
