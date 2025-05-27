@@ -1,77 +1,128 @@
-.ps-container {
+/* Container */
+.placed-students-container {
+  background-color: #eafcff;
+  min-height: 50vh;
+  width: 100%;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #004f57;
   max-width: 900px;
-  margin: 20px auto;
-  padding: 1rem;
-  font-family: Arial, sans-serif;
-  background: #fff;
-  border-radius: 6px;
-  box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+  margin: 0 auto;
 }
 
-.ps-title {
+/* Title */
+.placed-students-container h1 {
   text-align: center;
-  margin-bottom: 1.5rem;
-  color: #333;
+  font-size: 32px;
+  color: #006d77;
+  margin-bottom: 35px;
+  font-weight: 700;
 }
 
-.ps-filters {
+/* Filter Section */
+.filter-section {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1rem;
   justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
   align-items: center;
+  font-weight: 600;
+  color: #004f57;
 }
 
-.ps-input,
-.ps-select,
-.ps-date-input {
-  padding: 0.4rem 0.7rem;
-  font-size: 1rem;
-  border: 1px solid #bbb;
-  border-radius: 4px;
-  min-width: 180px;
+.filter-section label {
+  font-size: 18px;
 }
 
-.ps-date-label {
-  font-size: 0.9rem;
-  color: #555;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
+.filter-section select {
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1.8px solid #006d77;
+  width: 220px;
+  cursor: pointer;
+  color: #004f57;
+  background-color: white;
+  transition: border-color 0.3s ease;
 }
 
-.ps-table {
+.filter-section select:hover,
+.filter-section select:focus {
+  border-color: #004f57;
+  outline: none;
+}
+
+.filter-section button {
+  background-color: #006d77;
+  color: white;
+  border: none;
+  padding: 11px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 4px 8px rgba(0, 109, 119, 0.3);
+  transition: background-color 0.3s ease;
+}
+
+.filter-section button:hover {
+  background-color: #004f57;
+}
+
+/* Table Styles */
+.students-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.95rem;
-  color: #333;
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0, 109, 119, 0.15);
 }
 
-.ps-table thead tr {
-  background-color: #007bff;
-  color: white;
+.students-table thead {
+  background-color: #006d77;
 }
 
-.ps-table th,
-.ps-table td {
-  border: 1px solid #ddd;
-  padding: 10px 12px;
+.students-table th,
+.students-table td {
+  padding: 14px 20px;
+  border-bottom: 1px solid #e1e1e1;
   text-align: left;
+  font-weight: 500;
+  color: #004f57;
 }
 
-.ps-table tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
+.students-table th {
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
 }
 
-.ps-table tbody tr:hover {
-  background-color: #f1f7ff;
+.students-table tbody tr:hover {
+  background-color: #daf4fc;
+  transition: background-color 0.3s ease;
 }
 
-.ps-loading,
-.ps-error {
-  text-align: center;
-  font-size: 1.1rem;
-  color: #666;
-  margin-top: 2rem;
+.students-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .filter-section {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .filter-section select,
+  .filter-section button {
+    width: 100%;
+  }
+
+  .students-table th,
+  .students-table td {
+    padding: 12px 10px;
+    font-size: 14px;
+  }
 }

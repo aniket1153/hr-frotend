@@ -53,6 +53,14 @@ const handleOpenInterviewDetails = (companyId) => {
         toast.error("You are not logged in. Please login first.");
         return;
       }
+      
+      const updatePayload = {
+      status: newStatus
+    };
+    if (newStatus === "Placed") {
+      updatePayload.date = new Date().toISOString();  // Save date in ISO format
+    }
+
       const response = await axiosInstance .patch(
         `/api/students/${student._id}`,
         { status: newStatus },

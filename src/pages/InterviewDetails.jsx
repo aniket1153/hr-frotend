@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import axiosInstance from '../axiosInstance';  // <-- Use axiosInstance here
+import { useParams, useNavigate } from 'react-router-dom';
+import axiosInstance from '../axiosInstance';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './InterviewDetails.css';
 
 const InterviewDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const [company, setCompany] = useState(null);
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +23,6 @@ const InterviewDetail = () => {
       try {
         const token = localStorage.getItem('token');
 
-        // Use axiosInstance with baseURL 'http://localhost:5000/api'
         const companyRes = await axiosInstance.get(`/api/companies/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -69,19 +72,22 @@ const InterviewDetail = () => {
         resumesSent: resumesSentCount,
       };
 
-      await axiosInstance.post('/api/reports', reportData, {
+      await axios.post('http://localhost:5000/api/reports', reportData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      alert('Report submitted successfully!');
+      toast.success('Report submitted successfully!');
+      setTimeout(() => navigate('/report'), 1500);
     } catch (err) {
       console.error(err);
-      alert('Failed to submit report');
+      toast.error('Failed to submit report');
     }
   };
 
   return (
     <div className="interview-container">
+      <ToastContainer position="top-right" autoClose={3000} />
+
       <div className="header">Interview Details</div>
 
       <div className="company-details">
@@ -121,9 +127,7 @@ const InterviewDetail = () => {
             onChange={(e) => setSearchApplied(e.target.value)}
           />
           <table>
-            <thead>
-              <tr><th>SrNo</th><th>Name</th></tr>
-            </thead>
+            <thead><tr><th>SrNo</th><th>Name</th></tr></thead>
             <tbody>
               {appliedStudents
                 .filter((s) => s.name?.toLowerCase().includes(searchApplied.toLowerCase()))
@@ -143,9 +147,7 @@ const InterviewDetail = () => {
             onChange={(e) => setSearchShortlisted(e.target.value)}
           />
           <table>
-            <thead>
-              <tr><th>SrNo</th><th>Name</th></tr>
-            </thead>
+            <thead><tr><th>SrNo</th><th>Name</th></tr></thead>
             <tbody>
               {shortlistedStudents
                 .filter((s) => s.name?.toLowerCase().includes(searchShortlisted.toLowerCase()))
@@ -165,9 +167,7 @@ const InterviewDetail = () => {
             onChange={(e) => setSearchPlaced(e.target.value)}
           />
           <table>
-            <thead>
-              <tr><th>SrNo</th><th>Name</th></tr>
-            </thead>
+            <thead><tr><th>SrNo</th><th>Name</th></tr></thead>
             <tbody>
               {placedStudents
                 .filter((s) => s.name?.toLowerCase().includes(searchPlaced.toLowerCase()))

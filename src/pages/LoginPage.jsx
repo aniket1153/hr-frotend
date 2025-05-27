@@ -28,7 +28,7 @@ const LoginPage = () => {
 
       toast.success('Login successful!', {
         position: 'top-center',
-        autoClose: 2000,
+        autoClose: 700,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: false,
@@ -38,7 +38,7 @@ const LoginPage = () => {
 
       setTimeout(() => {
         navigate('/admin-home');
-      }, 1700);
+      }, 1000);
 
     } catch (error) {
       const message = error.response?.data?.message || 'Login failed. Please try again.';

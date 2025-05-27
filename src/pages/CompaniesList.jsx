@@ -37,13 +37,37 @@ const CompaniesList = () => {
   const handleViewCompany = (id) => {
     navigate(`/company/${id}`);
   };
+  const handleUpdateCompany = (id) => {
+  navigate(`/company/update/${id}`);
+};
+
+const handleDeleteCompany = async (id) => {
+  const confirmDelete = window.confirm('Are you sure you want to delete this company?');
+  if (!confirmDelete) return;
+
+  const token = localStorage.getItem('token');
+
+  try {
+    await axiosInstance.delete(`/api/companies/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    setCompanies(prev => prev.filter(company => company._id !== id));
+    alert('Company deleted successfully');
+  } catch (error) {
+    console.error("Delete error:", error);
+    alert('Failed to delete the company');
+  }
+};
+
 
   if (loading) return <p className="loading-msg">Loading companies...</p>;
   if (error) return <p className="error-msg">{error}</p>;
 
   return (
     <div className="companies-container">
-      <h1>📊 Companies & Open Positions</h1>
+      <h1> Companies & Open Positions</h1>
       {companies.length === 0 ? (
         <p>No companies found.</p>
       ) : (
@@ -66,9 +90,12 @@ const CompaniesList = () => {
                 <td>{company.location || 'N/A'}</td>
                 <td>{company.platform || 'N/A'}</td>
                 <td>{company.lastOpeningDate ? new Date(company.lastOpeningDate).toLocaleDateString() : 'N/A'}</td>
-                <td>
-                  <button onClick={() => handleViewCompany(company._id)}>View</button>
-                </td>
+               <td>
+  <button onClick={() => handleViewCompany(company._id)}>View</button>
+  <button onClick={() => handleUpdateCompany(company._id)}>Update</button>
+  <button onClick={() => handleDeleteCompany(company._id)}>Delete</button>
+</td>
+
               </tr>
             ))}
           </tbody>
