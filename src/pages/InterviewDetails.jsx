@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axiosInstance from '../axiosInstance';
+import axiosInstance from '../axiosInstance'; 
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './InterviewDetails.css';
@@ -18,30 +18,36 @@ const InterviewDetail = () => {
   const [searchShortlisted, setSearchShortlisted] = useState('');
   const [searchPlaced, setSearchPlaced] = useState('');
 
+  const [showApplied, setShowApplied] = useState(true);
+  const [showShortlisted, setShowShortlisted] = useState(true);
+  const [showPlaced, setShowPlaced] = useState(true);
+
   useEffect(() => {
-    const fetchCompanyAndStudents = async () => {
-      try {
-        const token = localStorage.getItem('token');
-
-        const companyRes = await axiosInstance.get(`/api/companies/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setCompany(companyRes.data);
-
-        const studentRes = await axiosInstance.get('/api/students', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setStudents(studentRes.data);
-      } catch (err) {
-        console.error(err);
-        setError('Failed to load interview details.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchCompanyAndStudents();
   }, [id]);
+
+  const fetchCompanyAndStudents = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+
+      // Use full backend URL here
+      const companyRes = await axiosInstance .get(`/api/companies/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setCompany(companyRes.data);
+
+      const studentRes = await axiosInstance .get('/api/students', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setStudents(studentRes.data);
+    } catch (err) {
+      console.error(err);
+      setError('Failed to load interview details.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="error-msg">{error}</p>;
@@ -49,6 +55,7 @@ const InterviewDetail = () => {
 
   const companyName = company.companyName;
 
+  // Filter students by status and company
   const appliedStudents = students.filter(
     (s) => s.appliedCompany === companyName && s.status?.toLowerCase() === 'applied'
   );
@@ -60,6 +67,33 @@ const InterviewDetail = () => {
   );
 
   const resumesSentCount = students.filter((s) => s.appliedCompany === companyName).length;
+
+  // Update student status API call using axios and full URL
+  const updateStatus = async (studentId, newStatus) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.put(
+        `http://localhost:5000/api/students/${studentId}/status`,
+        { status: newStatus },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      // Refresh the students list after update
+      await fetchCompanyAndStudents();
+      toast.success('Student status updated');
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to update student status');
+    }
+  };
+
+  // Handle checkbox change: automatically move on checking
+  const handleCheckboxChange = (studentId, currentStatus) => {
+    if (currentStatus === 'applied') {
+      updateStatus(studentId, 'shortlisted');
+    } else if (currentStatus === 'shortlisted') {
+      updateStatus(studentId, 'placed');
+    }
+  };
 
   const handleSubmitReport = async () => {
     try {
@@ -87,7 +121,6 @@ const InterviewDetail = () => {
   return (
     <div className="interview-container">
       <ToastContainer position="top-right" autoClose={3000} />
-
       <div className="header">Interview Details</div>
 
       <div className="company-details">
@@ -100,10 +133,7 @@ const InterviewDetail = () => {
       </div>
 
       <div className="job-description">
-        The candidate should have basic knowledge of MongoDB, Express.js, React.js, and Node.js,
-        along with a good understanding of JavaScript, HTML, and CSS. This is a great opportunity to
-        work on real-time projects, learn from experienced developers, and grow your career in
-        full-stack development.
+        The candidate should have basic knowledge of MongoDB, Express.js, React.js, and Node.js...
       </div>
 
       <div className="summary-boxes">
@@ -117,71 +147,154 @@ const InterviewDetail = () => {
         </div>
       </div>
 
-      <div className="lists-container">
-        <div className="list">
-          <h4>Applied Students ▼</h4>
-          <input
-            type="text"
-            placeholder="Search Student"
-            value={searchApplied}
-            onChange={(e) => setSearchApplied(e.target.value)}
-          />
-          <table>
-            <thead><tr><th>SrNo</th><th>Name</th></tr></thead>
-            <tbody>
-              {appliedStudents
-                .filter((s) => s.name?.toLowerCase().includes(searchApplied.toLowerCase()))
-                .map((student, i) => (
-                  <tr key={student._id}><td>{`0${i + 1}`}</td><td>{student.name}</td></tr>
-                ))}
-            </tbody>
-          </table>
+      <div
+        className="lists-container"
+        style={{ display: 'flex', gap: '20px', justifyContent: 'space-between' }}
+      >
+        {/* Applied Students */}
+        <div className="list" style={{ flex: 1 }}>
+          <h4
+            onClick={() => setShowApplied(!showApplied)}
+            style={{ cursor: 'pointer' }}
+          >
+            Applied Students {showApplied ? '▲' : '▼'}
+          </h4>
+          {showApplied && (
+            <>
+              <input
+                type="text"
+                placeholder="Search Student"
+                value={searchApplied}
+                onChange={(e) => setSearchApplied(e.target.value)}
+              />
+              <table>
+                <thead>
+                  <tr>
+                    <th>Select</th>
+                    <th>SrNo</th>
+                    <th>Name</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {appliedStudents
+                    .filter((s) =>
+                      s.name?.toLowerCase().includes(searchApplied.toLowerCase())
+                    )
+                    .map((student, i) => (
+                      <tr key={student._id}>
+                        <td>
+                          <input
+                            type="checkbox"
+                            onChange={() => handleCheckboxChange(student._id, 'applied')}
+                          />
+                        </td>
+                        <td>{`0${i + 1}`}</td>
+                        <td>{student.name}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </>
+          )}
         </div>
 
-        <div className="list">
-          <h4>Shortlisted Students ▼</h4>
-          <input
-            type="text"
-            placeholder="Search Student"
-            value={searchShortlisted}
-            onChange={(e) => setSearchShortlisted(e.target.value)}
-          />
-          <table>
-            <thead><tr><th>SrNo</th><th>Name</th></tr></thead>
-            <tbody>
-              {shortlistedStudents
-                .filter((s) => s.name?.toLowerCase().includes(searchShortlisted.toLowerCase()))
-                .map((student, i) => (
-                  <tr key={student._id}><td>{`0${i + 1}`}</td><td>{student.name}</td></tr>
-                ))}
-            </tbody>
-          </table>
+        {/* Shortlisted Students */}
+        <div className="list" style={{ flex: 1 }}>
+          <h4
+            onClick={() => setShowShortlisted(!showShortlisted)}
+            style={{ cursor: 'pointer' }}
+          >
+            Shortlisted Students {showShortlisted ? '▲' : '▼'}
+          </h4>
+          {showShortlisted && (
+            <>
+              <input
+                type="text"
+                placeholder="Search Student"
+                value={searchShortlisted}
+                onChange={(e) => setSearchShortlisted(e.target.value)}
+              />
+              <table>
+                <thead>
+                  <tr>
+                    <th>Select</th>
+                    <th>SrNo</th>
+                    <th>Name</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {shortlistedStudents
+                    .filter((s) =>
+                      s.name?.toLowerCase().includes(searchShortlisted.toLowerCase())
+                    )
+                    .map((student, i) => (
+                      <tr key={student._id}>
+                        <td>
+                          <input
+                            type="checkbox"
+                            onChange={() =>
+                              handleCheckboxChange(student._id, 'shortlisted')
+                            }
+                          />
+                        </td>
+                        <td>{`0${i + 1}`}</td>
+                        <td>{student.name}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </>
+          )}
         </div>
 
-        <div className="list">
-          <h4>Placed Students ▼</h4>
-          <input
-            type="text"
-            placeholder="Search Student"
-            value={searchPlaced}
-            onChange={(e) => setSearchPlaced(e.target.value)}
-          />
-          <table>
-            <thead><tr><th>SrNo</th><th>Name</th></tr></thead>
-            <tbody>
-              {placedStudents
-                .filter((s) => s.name?.toLowerCase().includes(searchPlaced.toLowerCase()))
-                .map((student, i) => (
-                  <tr key={student._id}><td>{`0${i + 1}`}</td><td>{student.name}</td></tr>
-                ))}
-            </tbody>
-          </table>
+        {/* Placed Students */}
+        <div className="list" style={{ flex: 1 }}>
+          <h4
+            onClick={() => setShowPlaced(!showPlaced)}
+            style={{ cursor: 'pointer' }}
+          >
+            Placed Students {showPlaced ? '▲' : '▼'}
+          </h4>
+          {showPlaced && (
+            <>
+              <input
+                type="text"
+                placeholder="Search Student"
+                value={searchPlaced}
+                onChange={(e) => setSearchPlaced(e.target.value)}
+              />
+              <table>
+                <thead>
+                  <tr>
+                    <th>SrNo</th>
+                    <th>Name</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {placedStudents
+                    .filter((s) =>
+                      s.name?.toLowerCase().includes(searchPlaced.toLowerCase())
+                    )
+                    .map((student, i) => (
+                      <tr key={student._id}>
+                        <td>{`0${i + 1}`}</td>
+                        <td>{student.name}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </>
+          )}
         </div>
       </div>
 
-      <div style={{ marginTop: '20px' }}>
-        <button onClick={handleSubmitReport}>Submit Report</button>
-      </div>
+      <button
+        className="submit-report-btn"
+        onClick={handleSubmitReport}
+        style={{ marginTop: '20px', color:"#007b7a !important" }}
+      >
+        Submit Report
+      </button>
     </div>
   );
 };

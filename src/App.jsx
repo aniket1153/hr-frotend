@@ -16,6 +16,7 @@ import ViewStudents from "./pages/ViewStudents";
 import PlacedStudents from "./pages/PlacedStudents";
 import Unauthorized from "./components/Unauthorized";
 import Report from "./pages/Report";
+import EditCompany from "./pages/EditCompany";
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
             </RequireAuth>
           }
         />
+        <Route path="/company/update/:id" element={<EditCompany />} />
         <Route
           path="/add-company"
           element={

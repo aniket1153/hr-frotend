@@ -45,40 +45,40 @@ const handleOpenInterviewDetails = (companyId) => {
     }
   };
 
-  const handleStatusChange = async (index, newStatus) => {
-    const student = students[index];
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        toast.error("You are not logged in. Please login first.");
-        return;
-      }
+  // const handleStatusChange = async (index, newStatus) => {
+  //   const student = students[index];
+  //   try {
+  //     const token = localStorage.getItem('token');
+  //     if (!token) {
+  //       toast.error("You are not logged in. Please login first.");
+  //       return;
+  //     }
       
-      const updatePayload = {
-      status: newStatus
-    };
-    if (newStatus === "Placed") {
-      updatePayload.date = new Date().toISOString();  // Save date in ISO format
-    }
+  //     const updatePayload = {
+  //     status: newStatus
+  //   };
+  //   if (newStatus === "Placed") {
+  //     updatePayload.date = new Date().toISOString();  // Save date in ISO format
+  //   }
 
-      const response = await axiosInstance .patch(
-        `/api/students/${student._id}`,
-        { status: newStatus },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+  //     const response = await axiosInstance .patch(
+  //       `/api/students/${student._id}`,
+  //       { status: newStatus },
+  //       { headers: { Authorization: `Bearer ${token}` } }
+  //     );
 
-      const updatedStudent = response.data;
-      const updatedStudents = [...students];
-      updatedStudents[index] = updatedStudent;
-      setStudents(updatedStudents);
+  //     const updatedStudent = response.data;
+  //     const updatedStudents = [...students];
+  //     updatedStudents[index] = updatedStudent;
+  //     setStudents(updatedStudents);
 
-      const displayName = updatedStudent.name || updatedStudent.fullName || "Student";
-      toast.success(`Status updated for ${displayName}`);
-    } catch (err) {
-      console.error("Failed to update status:", err.response || err.message);
-      toast.error(err.response?.data?.message || "Error updating student status. Please try again.");
-    }
-  };
+  //     const displayName = updatedStudent.name || updatedStudent.fullName || "Student";
+  //     toast.success(`Status updated for ${displayName}`);
+  //   } catch (err) {
+  //     console.error("Failed to update status:", err.response || err.message);
+  //     toast.error(err.response?.data?.message || "Error updating student status. Please try again.");
+  //   }
+  // };
 
   const handleDelete = async (id) => {
     if (!id) {
@@ -121,7 +121,7 @@ const handleOpenInterviewDetails = (companyId) => {
             <th>Contact</th>
             <th>Course</th>
             <th>Company Applied</th>
-            <th>Status</th>
+            {/* <th>Status</th> */}
             <th>Delete</th>
           </tr>
         </thead>
@@ -134,7 +134,7 @@ const handleOpenInterviewDetails = (companyId) => {
               <td>{stu.contact}</td>
               <td>{stu.courseName || stu.course}</td>
               <td>{stu.appliedCompany || "N/A"}</td>
-              <td>
+              {/* <td>
                 <select
                   value={stu.status}
                   onChange={(e) => handleStatusChange(idx, e.target.value)}
@@ -144,7 +144,7 @@ const handleOpenInterviewDetails = (companyId) => {
                     <option key={status} value={status}>{status}</option>
                   ))}
                 </select>
-              </td>
+              </td> */}
               <td>
                 <button className="delete-btn" onClick={() => handleDelete(stu._id)}>Delete</button>
               </td>

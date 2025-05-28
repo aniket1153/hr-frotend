@@ -37,9 +37,10 @@ const CompaniesList = () => {
   const handleViewCompany = (id) => {
     navigate(`/company/${id}`);
   };
-  const handleUpdateCompany = (id) => {
+ const handleUpdateCompany = (id) => {
   navigate(`/company/update/${id}`);
 };
+
 
 const handleDeleteCompany = async (id) => {
   const confirmDelete = window.confirm('Are you sure you want to delete this company?');
@@ -92,7 +93,8 @@ const handleDeleteCompany = async (id) => {
                 <td>{company.lastOpeningDate ? new Date(company.lastOpeningDate).toLocaleDateString() : 'N/A'}</td>
                <td>
   <button onClick={() => handleViewCompany(company._id)}>View</button>
-  <button onClick={() => handleUpdateCompany(company._id)}>Update</button>
+ <button onClick={() => handleUpdateCompany(company._id)}>Update</button>
+
   <button onClick={() => handleDeleteCompany(company._id)}>Delete</button>
 </td>
 
