@@ -72,8 +72,8 @@ const InterviewDetail = () => {
   const updateStatus = async (studentId, newStatus) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(
-        `http://localhost:5000/api/students/${studentId}/status`,
+      await axiosInstance.put(
+        `/api/students/${studentId}/status`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -106,7 +106,7 @@ const InterviewDetail = () => {
         resumesSent: resumesSentCount,
       };
 
-      await axios.post('http://localhost:5000/api/reports', reportData, {
+      await axiosInstance.post('/api/reports', reportData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
