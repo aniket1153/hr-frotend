@@ -1,241 +1,243 @@
-i want for this code this css
-/\* InterviewDetails.css \*/
+/* InterviewDetails.css */
 
 .interview-container {
-font-family: 'Segoe UI', sans-serif;
-padding: 20px;
-background-color: #ecf6f8;
-color: #007b7a;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 20px;
+  background-color: #ecf6f8;
+  color: #007b7a;
 }
 
+/* Header */
 .header {
-background-color: #007b7a;
-color: white;
-text-align: center;
-padding: 12px;
-font-size: 30px;
-font-weight: bold;
-border-radius: 5px;
-margin-bottom: 25px;
+  background-color: #007b7a;
+  color: white;
+  text-align: center;
+  padding: 14px;
+  font-size: 32px;
+  font-weight: bold;
+  border-radius: 8px;
+  margin-bottom: 25px;
 }
 
-
-
+/* Company & Job Info */
 .company-details,
 .job-details {
-display: flex;
-justify-content: space-between;
-font-weight: bold;
-font-size: 18px;
-margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
 }
 
 .job-description {
-background-color: #d1f2f7;
-padding: 15px;
-border-radius: 8px;
-font-size: 14px;
-margin-bottom: 25px;
-border: 1px solid #a3e2ea;
-line-height: 1.6;
+  background-color: #d1f2f7;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 25px;
+  border: 1px solid #a3e2ea;
+  line-height: 1.6;
 }
 
+/* Summary Boxes */
 .summary-boxes {
-display: flex;
-gap: 40px;
-margin-bottom: 30px;
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
 }
 
 .box {
-background-color: #007b7a;
-color: white;
-width: 120px;
-height: 100px;
-text-align: center;
-padding: 10px;
-border-radius: 16px;
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
+  background-color: #007b7a;
+  color: white;
+  width: 130px;
+  height: 100px;
+  text-align: center;
+  padding: 12px;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .box h2 {
-font-size: 36px;
-margin: 0;
+  font-size: 36px;
+  margin: 0;
 }
 
 .box span {
-font-size: 16px;
-margin-top: 5px;
+  font-size: 16px;
+  margin-top: 5px;
 }
 
-.lists-container {
-display: flex;
-gap: 20px;
-margin-bottom: 25px;
-}
-
-.list {
-background-color: #D1F2F7;
-color: #000;
-border: 1px solid #ccc;
-padding: 12px;
-border-radius: 10px;
-width: 30%;
-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-
-}
-
-.list h4 {
-margin-top: 0;
-font-size: 16px;
-margin-bottom: 10px;
-}
-
-.list input[type="text"] {
-width: 100%;
-padding: 6px;
-margin-bottom: 10px;
-border-radius: 5px;
-border: 1px solid #ccc;
-font-size: 14px;
-}
-
-.submit-report-btn{
-  background-color: #007b7a;
-}
-.list table {
-width: 100%;
-border-collapse: collapse;
-font-size: 14px;
-}
-
-.list th{
-    background-color: #026163;
-    color:white;
-}
-.list td {
-border: 1px solid #ccc;
-padding: 6px;
-text-align: center;
-
-}
-
+/* Main Table (Candidates) */
 .students-table {
-margin-top: 10px;
-background-color: white;
-border: 1px solid #ccc;
-border-radius: 10px;
-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-overflow-x: auto;
-font-size: 14px;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 30px;
 }
 
-.students-table table {
-width: 100%;
-border-collapse: collapse;
+.students-table th {
+  background-color: #026163;
+  color: white;
+  padding: 8px;
 }
 
-.students-table th,
 .students-table td {
-border: 1px solid #ccc;
-padding: 10px;
-text-align: center;
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
 }
 
+/* Upload Button */
 .upload-btn {
-background-color: #034c4e;
-color: white;
-border: none;
-padding: 6px 14px;
-border-radius: 5px;
-cursor: pointer;
-font-size: 14px;
+  background-color: #034c4e;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
 }
 
-.upload-btn\:hover {
-background-color: #026163;
+.upload-btn:hover {
+  background-color: #026163;
 }
 
-.submit-button {
-text-align: center;
-margin-top: 25px;
-}
-
-.submit-button button {
-background-color: #034c4e;
-color: white;
-border: none;
-padding: 12px 28px;
-font-size: 20px;
-border-radius: 10px;
-cursor: pointer;
-font-weight: bold;
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.submit-button button\:hover {
-background-color: #026163;
-}
-
-@media (max-width: 768px) {
-.lists-container,
-.summary-boxes {
-flex-direction: column;
-gap: 20px;
-}
-
-.list,
-.box {
-width: 100%;
-}
-}
-.interview-detail-container {
-  padding: 20px;
-  background-color: #ffffff;
-}
-
+/* Lists Section */
 .lists-container {
   display: flex;
   gap: 20px;
-  flex-wrap: wrap;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
 }
 
 .list {
-  background-color: #f9f9f9;
-  padding: 15px;
-  border-radius: 10px;
+  background-color: #d1f2f7;
+  color: #000;
+  border: 1px solid #ccc;
+  padding: 14px;
+  border-radius: 12px;
   flex: 1;
-  min-width: 250px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  min-width: 200px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .list h4 {
+  font-size: 16px;
   margin-bottom: 10px;
-  font-size: 18px;
-  color: #333;
+  color: #026163;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+.list input[type="text"] {
+  width: calc(100% - 2px); /* ensures input stays within box */
+  padding: 6px 10px;
+  margin: 0 0 10px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  box-sizing: border-box; /* avoids overflow */
+  display: block;
 }
 
-.list input {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 6px 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
 
 .list table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 14px;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.list th,
+.list th {
+  background-color: #026163;
+  color: white;
+  padding: 6px;
+}
+
 .list td {
-  text-align: left;
-  padding: 8px;
-  border-bottom: 1px solid #ddd;
+  border: 1px solid #ccc;
+  padding: 6px;
+  text-align: center;
+}
+
+/* Status Dropdown */
+.status-dropdown {
+  padding: 6px 8px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: #026163;
+  width: 120px;
+}
+
+/* No Candidate Selected + Submit */
+.final-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.no-candidate-box {
+  background-color: #007b7a;
+  color: white;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.submit-report-btn {
+  background-color: #007b7a;
+  color: white;
+  padding: 12px 28px;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease;
+}
+
+.submit-report-btn:hover {
+  background-color: #026163;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .company-details,
+  .job-details {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .summary-boxes,
+  .lists-container,
+  .final-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .box,
+  .list,
+  .submit-report-btn,
+  .no-candidate-box {
+    width: 100%;
+    text-align: center;
+  }
 }

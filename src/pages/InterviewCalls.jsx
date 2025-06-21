@@ -83,8 +83,8 @@ const InterviewCalls = () => {
               <th>Position</th>
               <th>Date</th>
               <th>No. of Calls</th>
-              <th>Current Status Of Company</th>
-              <th>Update Status</th>
+              {/* <th>Current Status Of Company</th>
+              <th>Update Status</th> */}
               <th>Action</th>
             </tr>
           </thead>
@@ -101,7 +101,7 @@ const InterviewCalls = () => {
                   <td>{firstPosition?.title || 'N/A'}</td>
                   <td>{company.lastOpeningDate ? new Date(company.lastOpeningDate).toLocaleDateString() : 'N/A'}</td>
                   <td>{company.interviewCalls?.length || 0}</td>
-                  <td>{firstPosition?.status || 'N/A'}</td>
+                  {/* <td>{firstPosition?.status || 'N/A'}</td>
                   <td>
                     {firstPosition && (
                       <select
@@ -116,7 +116,7 @@ const InterviewCalls = () => {
                         <option value="Hold">Hold</option>
                       </select>
                     )}
-                  </td>
+                  </td> */}
                   <td>
                     <button
                       className="view-button"

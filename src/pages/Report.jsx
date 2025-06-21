@@ -1,59 +1,59 @@
 import React, { useEffect, useState } from 'react';
 import './Report.css';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import userIcon from '../assets/q1.png'; // 👤 Image
 
 const Report = () => {
   const navigate = useNavigate();
-  const [todayData, setTodayData] = useState({
-    companies: 0,
-    calls: 0,
-    interviews: 0,
-    placed: 0,
-  });
 
-  const [monthData, setMonthData] = useState({
-    companies: 0,
-    calls: 0,
-    interviews: 0,
-    placed: 0,
-  });
+  const [todayData, setTodayData] = useState({ companies: 0, calls: 0, interviews: 0, placed: 0 });
+  const [monthData, setMonthData] = useState({ companies: 0, calls: 0, interviews: 0, placed: 0 });
 
   useEffect(() => {
-    // Replace with real data from your app
-    const companyList = [
-      { name: 'TCS', date: '2025-05-23' },
-      { name: 'Infosys', date: '2025-05-23' },
-    ];
+    const fetchStats = async () => {
+      try {
+        const today = new Date().toISOString().slice(0, 10);
+        const month = new Date().toISOString().slice(0, 7);
+        const baseURL = 'http://localhost:5000';
+        const token = localStorage.getItem("token");
 
-    const interviewCalls = [
-      { id: 1, date: '2025-05-23' },
-      { id: 2, date: '2025-05-22' },
-    ];
+        const config = { headers: { Authorization: `Bearer ${token}` } };
 
-    const interviewDetails = [
-      { status: 'scheduled', date: '2025-05-23' },
-      { status: 'placed', date: '2025-05-23' },
-    ];
+        const [todayCompanies, todayCalls, todayInterviews, todayPlaced] = await Promise.all([
+          axios.get(`${baseURL}/api/companies/stats?date=${today}`, config),
+          axios.get(`${baseURL}/api/interview-calls/stats?date=${today}`, config),
+          axios.get(`${baseURL}/api/reports/stats?status=scheduled&date=${today}`, config),
+          axios.get(`${baseURL}/api/reports/stats?status=placed&date=${today}`, config),
+        ]);
 
-    const today = new Date().toISOString().slice(0, 10);
-    const month = new Date().toISOString().slice(0, 7); // "2025-05"
+        const [monthCompanies, monthCalls, monthInterviews, monthPlaced] = await Promise.all([
+          axios.get(`${baseURL}/api/companies/stats?month=${month}`, config),
+          axios.get(`${baseURL}/api/interview-calls/stats?month=${month}`, config),
+          axios.get(`${baseURL}/api/reports/stats?status=scheduled&month=${month}`, config),
+          axios.get(`${baseURL}/api/reports/stats?status=placed&month=${month}`, config),
+        ]);
 
-    const filterByToday = (list) => list.filter(item => item.date === today);
-    const filterByMonth = (list) => list.filter(item => item.date.startsWith(month));
+        setTodayData({
+          companies: todayCompanies.data.count || 0,
+          calls: todayCalls.data.count || 0,
+          interviews: todayInterviews.data.count || 0,
+          placed: todayPlaced.data.count || 0,
+        });
 
-    setTodayData({
-      companies: filterByToday(companyList).length,
-      calls: filterByToday(interviewCalls).length,
-      interviews: filterByToday(interviewDetails.filter(i => i.status === 'scheduled')).length,
-      placed: filterByToday(interviewDetails.filter(i => i.status === 'placed')).length,
-    });
+        setMonthData({
+          companies: monthCompanies.data.count || 0,
+          calls: monthCalls.data.count || 0,
+          interviews: monthInterviews.data.count || 0,
+          placed: monthPlaced.data.count || 0,
+        });
 
-    setMonthData({
-      companies: filterByMonth(companyList).length,
-      calls: filterByMonth(interviewCalls).length,
-      interviews: filterByMonth(interviewDetails.filter(i => i.status === 'scheduled')).length,
-      placed: filterByMonth(interviewDetails.filter(i => i.status === 'placed')).length,
-    });
+      } catch (error) {
+        console.error('Error fetching report data:', error.response?.data || error.message);
+      }
+    };
+
+    fetchStats();
   }, []);
 
   const StatCard = ({ title, value }) => (
@@ -65,11 +65,13 @@ const Report = () => {
 
   return (
     <div className="report-container">
-      <button className="back-button" onClick={() => navigate('/interview-calls')}>
-  ← Back
-</button>
-      <div className="report-header">Report</div>
-      
+      <div className="report-topbar">
+        <div className="tabs">
+          <div className="tab active">HR Report</div>
+          <div className="tab" onClick={() => navigate('/placement-report')}>Placement Report</div>
+        </div>
+        <img src={userIcon} alt="User" className="user-icon" />
+      </div>
 
       <section className="report-section">
         <h2 className="section-title">TODAY</h2>
@@ -90,6 +92,10 @@ const Report = () => {
           <StatCard title="Total Candidates Placed" value={monthData.placed} />
         </div>
       </section>
+
+      <button className="back-button" onClick={() => navigate('/interview-calls')}>
+        ← Back
+      </button>
     </div>
   );
 };

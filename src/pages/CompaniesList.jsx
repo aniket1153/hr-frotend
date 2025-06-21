@@ -95,7 +95,7 @@ const handleDeleteCompany = async (id) => {
   <button onClick={() => handleViewCompany(company._id)}>View</button>
  <button onClick={() => handleUpdateCompany(company._id)}>Update</button>
 
-  <button onClick={() => handleDeleteCompany(company._id)}>Delete</button>
+  {/* <button onClick={() => handleDeleteCompany(company._id)}>Delete</button> */}
 </td>
 
               </tr>

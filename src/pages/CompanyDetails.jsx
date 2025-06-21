@@ -1,119 +1,257 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import axiosInstance from '../axiosInstance'; 
+import { useParams, useNavigate } from 'react-router-dom';
+import axiosInstance from '../axiosInstance';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './CompanyDetails.css';
 
 const CompanyDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const [company, setCompany] = useState(null);
+  const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null);
+
+  const [searchApplied, setSearchApplied] = useState('');
+  const [searchShortlisted, setSearchShortlisted] = useState('');
+  const [searchPlaced, setSearchPlaced] = useState('');
+
+  const [showApplied, setShowApplied] = useState(false);
+  const [showShortlisted, setShowShortlisted] = useState(false);
+  const [showPlaced, setShowPlaced] = useState(false);
 
   useEffect(() => {
-    const fetchCompany = async () => {
+    fetchData();
+  }, [id]);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
       const token = localStorage.getItem('token');
 
-      if (!token) {
-        setError('❌ Authentication token is missing. Please login.');
-        setLoading(false);
-        return;
-      }
+      const companyRes = await axiosInstance.get(`/api/companies/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setCompany(companyRes.data);
 
-      try {
-        const response = await axiosInstance.get(`/api/companies/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+      const studentRes = await axiosInstance.get('/api/students', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setStudents(studentRes.data);
+    } catch (err) {
+      setError('❌ Failed to fetch data.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        if (!response.data || !response.data._id) {
-          setError('❌ Company data is incomplete or missing.');
-        } else {
-          setCompany(response.data);
-        }
-      } catch (err) {
-        const status = err.response?.status;
-        const msg =
-          status === 401
-            ? '❌ Unauthorized: Please login again.'
-            : status === 403
-            ? '🚫 Forbidden: You do not have permission.'
-            : status === 404
-            ? '🔍 Company not found.'
-            : '⚠️ Failed to fetch company details.';
-        setError(msg);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const updateStatus = async (studentId, newStatus) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axiosInstance.put(
+        `/api/students/${studentId}/status`,
+        { status: newStatus },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      await fetchData();
+      toast.success('Status updated successfully!');
+    } catch (err) {
+      toast.error('Failed to update status');
+    }
+  };
 
-    fetchCompany();
-  }, [id]);
+  const handleCheckboxChange = (studentId, currentStatus) => {
+    if (currentStatus === 'applied') {
+      updateStatus(studentId, 'shortlisted');
+    } else if (currentStatus === 'shortlisted') {
+      updateStatus(studentId, 'placed');
+    }
+  };
+
+  const handleSubmitReport = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const reportData = {
+        companyId: company._id,
+        appliedCount: appliedStudents.length,
+        shortlistedCount: shortlistedStudents.length,
+        placedCount: placedStudents.length,
+        resumesSent: students.filter((s) => s.appliedCompany === company.companyName).length,
+      };
+
+      await axiosInstance.post('/api/reports', reportData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      toast.success('Report submitted!');
+      setTimeout(() => navigate('/report'), 1500);
+    } catch (err) {
+      toast.error('Report submission failed.');
+    }
+  };
 
   if (loading) return <div className="spinner">Loading company details...</div>;
   if (error) return <div className="error-message">{error}</div>;
   if (!company) return <p>No company data available.</p>;
 
   const {
-    companyName = 'N/A',
-    hrName = 'N/A',
-    email = 'N/A',
-    contact = 'N/A',
-    location = 'N/A',
-    platform = 'N/A',
+    companyName,
+    hrName,
+    email,
+    contact,
+    location,
+    platform,
     lastOpeningDate,
-    positions = [],
   } = company;
 
-  const formattedDate = (date) => {
-    if (!date) return 'N/A';
-    const parsed = new Date(date);
-    return isNaN(parsed.getTime()) ? 'N/A' : parsed.toLocaleDateString();
+  const appliedStudents = students.filter(
+    (s) => s.appliedCompany === companyName && s.status?.toLowerCase() === 'applied'
+  );
+  const shortlistedStudents = students.filter(
+    (s) => s.appliedCompany === companyName && s.status?.toLowerCase() === 'shortlisted'
+  );
+  const placedStudents = students.filter(
+    (s) => s.appliedCompany === companyName && s.status?.toLowerCase() === 'placed'
+  );
+
+  const formatDate = (date) => {
+    const d = new Date(date);
+    return isNaN(d.getTime()) ? 'N/A' : d.toLocaleDateString();
   };
 
   return (
     <div className="company-details-card">
-      <h2 className="company-title">{companyName}</h2>
-      <div className="details-layout">
-        {/* Left Section */}
-        <div className="info-left">
-          <h3>Company Info</h3>
-          <div className="info-line"><span>HR Name</span>: {hrName}</div>
-          <div className="info-line"><span>Email</span>: {email}</div>
-          <div className="info-line"><span>Contact</span>: {contact}</div>
-          <div className="info-line"><span>Location</span>: {location}</div>
-          <div className="info-line"><span>Platform</span>: {platform}</div>
-          <div className="info-line">
-            <span>Last Opening Date</span>: {formattedDate(lastOpeningDate)}
-          </div>
-        </div>
+      <ToastContainer />
+      <h2 className="company-title">{companyName || 'Company Name'}</h2>
 
-        {/* Right Section */}
-        <div className="info-right">
-          <h3>Company History</h3>
-          <table className="history-table">
+      <div className="company-info">
+        <p><strong>HR Name</strong> : {hrName}</p>
+        <p><strong>Mail ID</strong> : {email}</p>
+        <p><strong>Contact</strong> : {contact}</p>
+        <p><strong>Location</strong> : {location}</p>
+        <p><strong>Platform</strong> : {platform}</p>
+        <p><strong>Last Opening Date</strong> : {formatDate(lastOpeningDate)}</p>
+      </div>
+
+      <div className="dropdowns">
+        <button className="dropdown-btn" onClick={() => setShowApplied(!showApplied)}>
+          Applied Students ▼
+        </button>
+        <button className="dropdown-btn" onClick={() => setShowShortlisted(!showShortlisted)}>
+          Shortlist Students ▼
+        </button>
+        <button className="dropdown-btn" onClick={() => setShowPlaced(!showPlaced)}>
+          Placed Students ▼
+        </button>
+      </div>
+
+      {showApplied && (
+        <div className="dropdown-section dropdown-content">
+          <input
+            type="text"
+            placeholder="Search Student"
+            value={searchApplied}
+            onChange={(e) => setSearchApplied(e.target.value)}
+          />
+          <table>
             <thead>
               <tr>
-                <th>Opening For</th>
-                <th>Opening Date</th>
-                <th>Placed Count</th>
+                <th>✔</th>
+                <th>Sr</th>
+                <th>Name</th>
               </tr>
             </thead>
             <tbody>
-              {positions.length > 0 ? (
-                positions.map((pos) => (
-                  <tr key={pos._id || Math.random()}>
-                    <td>{pos.positionName || 'N/A'}</td>
-                    <td>{formattedDate(pos.openingDate)}</td>
-                    <td>{Array.isArray(pos.placed) ? pos.placed.length : 0}</td>
+              {appliedStudents
+                .filter((s) => s.name?.toLowerCase().includes(searchApplied.toLowerCase()))
+                .map((student, i) => (
+                  <tr key={student._id}>
+                    <td>
+                      <input
+                        type="checkbox"
+                        onChange={() => handleCheckboxChange(student._id, 'applied')}
+                      />
+                    </td>
+                    <td>{`0${i + 1}`}</td>
+                    <td>{student.name}</td>
                   </tr>
-                ))
-              ) : (
-                <tr><td colSpan="3">No history available.</td></tr>
-              )}
+                ))}
             </tbody>
           </table>
         </div>
+      )}
+
+      {showShortlisted && (
+        <div className="dropdown-section dropdown-content">
+          <input
+            type="text"
+            placeholder="Search Student"
+            value={searchShortlisted}
+            onChange={(e) => setSearchShortlisted(e.target.value)}
+          />
+          <table>
+            <thead>
+              <tr>
+                <th>✔</th>
+                <th>Sr</th>
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {shortlistedStudents
+                .filter((s) => s.name?.toLowerCase().includes(searchShortlisted.toLowerCase()))
+                .map((student, i) => (
+                  <tr key={student._id}>
+                    <td>
+                      <input
+                        type="checkbox"
+                        onChange={() => handleCheckboxChange(student._id, 'shortlisted')}
+                      />
+                    </td>
+                    <td>{`0${i + 1}`}</td>
+                    <td>{student.name}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {showPlaced && (
+        <div className="dropdown-section dropdown-content">
+          <input
+            type="text"
+            placeholder="Search Student"
+            value={searchPlaced}
+            onChange={(e) => setSearchPlaced(e.target.value)}
+          />
+          <table>
+            <thead>
+              <tr>
+                <th>Sr</th>
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {placedStudents
+                .filter((s) => s.name?.toLowerCase().includes(searchPlaced.toLowerCase()))
+                .map((student, i) => (
+                  <tr key={student._id}>
+                    <td>{`0${i + 1}`}</td>
+                    <td>{student.name}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <div className="update-btn-wrap">
+        <button onClick={handleSubmitReport} className="update-btn">
+          Update
+        </button>
       </div>
     </div>
   );

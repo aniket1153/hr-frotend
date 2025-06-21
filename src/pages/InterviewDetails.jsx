@@ -31,13 +31,12 @@ const InterviewDetail = () => {
     try {
       const token = localStorage.getItem('token');
 
-      // Use full backend URL here
-      const companyRes = await axiosInstance .get(`/api/companies/${id}`, {
+      const companyRes = await axiosInstance.get(`/api/companies/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCompany(companyRes.data);
 
-      const studentRes = await axiosInstance .get('/api/students', {
+      const studentRes = await axiosInstance.get('/api/students', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setStudents(studentRes.data);
@@ -49,13 +48,8 @@ const InterviewDetail = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p className="error-msg">{error}</p>;
-  if (!company) return <p>No company found.</p>;
+  const companyName = company?.companyName;
 
-  const companyName = company.companyName;
-
-  // Filter students by status and company
   const appliedStudents = students.filter(
     (s) => s.appliedCompany === companyName && s.status?.toLowerCase() === 'applied'
   );
@@ -66,9 +60,13 @@ const InterviewDetail = () => {
     (s) => s.appliedCompany === companyName && s.status?.toLowerCase() === 'placed'
   );
 
-  const resumesSentCount = students.filter((s) => s.appliedCompany === companyName).length;
+  const resumesSentCount = students.filter(
+    (s) => s.appliedCompany === companyName
+  ).length;
 
-  // Update student status API call using axios and full URL
+  const notPlacedCount =
+    appliedStudents.length + shortlistedStudents.length;
+
   const updateStatus = async (studentId, newStatus) => {
     try {
       const token = localStorage.getItem('token');
@@ -77,7 +75,6 @@ const InterviewDetail = () => {
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      // Refresh the students list after update
       await fetchCompanyAndStudents();
       toast.success('Student status updated');
     } catch (err) {
@@ -86,7 +83,6 @@ const InterviewDetail = () => {
     }
   };
 
-  // Handle checkbox change: automatically move on checking
   const handleCheckboxChange = (studentId, currentStatus) => {
     if (currentStatus === 'applied') {
       updateStatus(studentId, 'shortlisted');
@@ -118,6 +114,10 @@ const InterviewDetail = () => {
     }
   };
 
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="error-msg">{error}</p>;
+  if (!company) return <p>No company found.</p>;
+
   return (
     <div className="interview-container">
       <ToastContainer position="top-right" autoClose={3000} />
@@ -147,16 +147,10 @@ const InterviewDetail = () => {
         </div>
       </div>
 
-      <div
-        className="lists-container"
-        style={{ display: 'flex', gap: '20px', justifyContent: 'space-between' }}
-      >
+      <div className="lists-container">
         {/* Applied Students */}
-        <div className="list" style={{ flex: 1 }}>
-          <h4
-            onClick={() => setShowApplied(!showApplied)}
-            style={{ cursor: 'pointer' }}
-          >
+        <div className="list">
+          <h4 onClick={() => setShowApplied(!showApplied)}>
             Applied Students {showApplied ? '▲' : '▼'}
           </h4>
           {showApplied && (
@@ -199,11 +193,8 @@ const InterviewDetail = () => {
         </div>
 
         {/* Shortlisted Students */}
-        <div className="list" style={{ flex: 1 }}>
-          <h4
-            onClick={() => setShowShortlisted(!showShortlisted)}
-            style={{ cursor: 'pointer' }}
-          >
+        <div className="list">
+          <h4 onClick={() => setShowShortlisted(!showShortlisted)}>
             Shortlisted Students {showShortlisted ? '▲' : '▼'}
           </h4>
           {showShortlisted && (
@@ -232,9 +223,7 @@ const InterviewDetail = () => {
                         <td>
                           <input
                             type="checkbox"
-                            onChange={() =>
-                              handleCheckboxChange(student._id, 'shortlisted')
-                            }
+                            onChange={() => handleCheckboxChange(student._id, 'shortlisted')}
                           />
                         </td>
                         <td>{`0${i + 1}`}</td>
@@ -248,11 +237,8 @@ const InterviewDetail = () => {
         </div>
 
         {/* Placed Students */}
-        <div className="list" style={{ flex: 1 }}>
-          <h4
-            onClick={() => setShowPlaced(!showPlaced)}
-            style={{ cursor: 'pointer' }}
-          >
+        <div className="list">
+          <h4 onClick={() => setShowPlaced(!showPlaced)}>
             Placed Students {showPlaced ? '▲' : '▼'}
           </h4>
           {showPlaced && (
@@ -288,13 +274,15 @@ const InterviewDetail = () => {
         </div>
       </div>
 
-      <button
-        className="submit-report-btn"
-        onClick={handleSubmitReport}
-        style={{ marginTop: '20px', color:"#007b7a !important" }}
-      >
-        Submit Report
-      </button>
+      {/* Footer Actions */}
+      <div className="final-actions">
+        <div className="no-candidate-box">
+          No Candidate Selected: {notPlacedCount}
+        </div>
+        <button className="submit-report-btn" onClick={handleSubmitReport}>
+          Submit
+        </button>
+      </div>
     </div>
   );
 };

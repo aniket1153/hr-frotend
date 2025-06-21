@@ -17,6 +17,7 @@ import PlacedStudents from "./pages/PlacedStudents";
 import Unauthorized from "./components/Unauthorized";
 import Report from "./pages/Report";
 import EditCompany from "./pages/EditCompany";
+import PlacementReport from "./pages/PlacementReport";
 
 function App() {
   return (
@@ -139,6 +140,9 @@ function App() {
             </RequireAuth>
           }
         />
+        // In App.js
+<Route path="/placement-report" element={<PlacementReport/>} />
+
       </Routes>
     </Router>
   );
