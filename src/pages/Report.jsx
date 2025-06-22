@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './Report.css';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../axiosInstance';
 import userIcon from '../assets/q1.png'; // 👤 Image
 
 const Report = () => {
@@ -15,23 +15,22 @@ const Report = () => {
       try {
         const today = new Date().toISOString().slice(0, 10);
         const month = new Date().toISOString().slice(0, 7);
-        const baseURL = 'http://localhost:5000';
         const token = localStorage.getItem("token");
 
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
         const [todayCompanies, todayCalls, todayInterviews, todayPlaced] = await Promise.all([
-          axios.get(`${baseURL}/api/companies/stats?date=${today}`, config),
-          axios.get(`${baseURL}/api/interview-calls/stats?date=${today}`, config),
-          axios.get(`${baseURL}/api/reports/stats?status=scheduled&date=${today}`, config),
-          axios.get(`${baseURL}/api/reports/stats?status=placed&date=${today}`, config),
+          axiosInstance.get(`/api/companies/stats?date=${today}`, config),
+          axiosInstance.get(`/api/interview-calls/stats?date=${today}`, config),
+          axiosInstance.get(`/api/reports/stats?status=scheduled&date=${today}`, config),
+          axiosInstance.get(`/api/reports/stats?status=placed&date=${today}`, config),
         ]);
 
         const [monthCompanies, monthCalls, monthInterviews, monthPlaced] = await Promise.all([
-          axios.get(`${baseURL}/api/companies/stats?month=${month}`, config),
-          axios.get(`${baseURL}/api/interview-calls/stats?month=${month}`, config),
-          axios.get(`${baseURL}/api/reports/stats?status=scheduled&month=${month}`, config),
-          axios.get(`${baseURL}/api/reports/stats?status=placed&month=${month}`, config),
+          axiosInstance.get(`/api/companies/stats?month=${month}`, config),
+          axiosInstance.get(`/api/interview-calls/stats?month=${month}`, config),
+          axiosInstance.get(`/api/reports/stats?status=scheduled&month=${month}`, config),
+          axiosInstance.get(`/api/reports/stats?status=placed&month=${month}`, config),
         ]);
 
         setTodayData({

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './PlacementReport.css';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../axiosInstance'; // ✅ Updated axios import
 import userIcon from '../assets/last.png';
 
 const PlacementReport = () => {
@@ -15,7 +15,7 @@ const PlacementReport = () => {
       try {
         const token = localStorage.getItem("token");
         const config = { headers: { Authorization: `Bearer ${token}` } };
-        const res = await axios.get('http://localhost:5000/api/reports/placement-summary', config);
+        const res = await axiosInstance.get('/api/reports/placement-summary', config); // ✅ Updated
         setCompanies(res.data);
       } catch (err) {
         console.error(err);
@@ -28,7 +28,7 @@ const PlacementReport = () => {
     try {
       const token = localStorage.getItem("token");
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.get(`http://localhost:5000/api/reports/placement-details/${companyId}`, config);
+      const res = await axiosInstance.get(`/api/reports/placement-details/${companyId}`, config); // ✅ Updated
       setSelectedCompany(companyId);
       setDetails(res.data);
     } catch (err) {
@@ -38,15 +38,13 @@ const PlacementReport = () => {
 
   return (
     <div className="placement-report-container">
-  <div className="report-header">
-  <div className="tabs">
-    <div className="tab" onClick={() => navigate('/report')}>HR Report</div>
-    <div className="tab active">Placement Report</div>
-  </div>
-  <img src={userIcon} alt="User" className="user-icon" />
-</div>
-
-
+      <div className="report-header">
+        <div className="tabs">
+          <div className="tab" onClick={() => navigate('/report')}>HR Report</div>
+          <div className="tab active">Placement Report</div>
+        </div>
+        <img src={userIcon} alt="User" className="user-icon" />
+      </div>
 
       <table className="company-table">
         <thead>
@@ -60,12 +58,14 @@ const PlacementReport = () => {
         </thead>
         <tbody>
           {companies.map((comp, i) => (
-            <tr key={comp._id|| 'Unnamed Company'}>
+            <tr key={comp._id || 'Unnamed Company'}>
               <td>{comp.srNo}</td>
               <td>{comp.name}</td>
               <td>{comp.location}</td>
               <td>{String(comp.placedCount).padStart(2, '0')}</td>
-              <td><button onClick={() => fetchDetails(comp._id)}>view</button></td>
+              <td>
+                <button onClick={() => fetchDetails(comp._id)}>View</button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -83,15 +83,14 @@ const PlacementReport = () => {
               </tr>
             </thead>
             <tbody>
-  {details.map((student, i) => (
-    <tr key={i}>
-      <td>{student.name}</td>
-      <td>{new Date(student.placedOn).toLocaleDateString('en-GB')}</td>
-      <td>{student.position}</td>
-    </tr>
-  ))}
-</tbody>
-
+              {details.map((student, i) => (
+                <tr key={i}>
+                  <td>{student.name}</td>
+                  <td>{new Date(student.placedOn).toLocaleDateString('en-GB')}</td>
+                  <td>{student.position}</td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
       )}
