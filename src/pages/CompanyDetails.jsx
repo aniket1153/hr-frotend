@@ -158,7 +158,7 @@ const CompanyDetails = () => {
           <table>
             <thead>
               <tr>
-                <th>✔</th>
+                {/* <th>✔</th> */}
                 <th>Sr</th>
                 <th>Name</th>
               </tr>
@@ -168,12 +168,12 @@ const CompanyDetails = () => {
                 .filter((s) => s.name?.toLowerCase().includes(searchApplied.toLowerCase()))
                 .map((student, i) => (
                   <tr key={student._id}>
-                    <td>
+                    {/* <td>
                       <input
                         type="checkbox"
                         onChange={() => handleCheckboxChange(student._id, 'applied')}
                       />
-                    </td>
+                    </td> */}
                     <td>{`0${i + 1}`}</td>
                     <td>{student.name}</td>
                   </tr>
@@ -194,7 +194,7 @@ const CompanyDetails = () => {
           <table>
             <thead>
               <tr>
-                <th>✔</th>
+                {/* <th>✔</th> */}
                 <th>Sr</th>
                 <th>Name</th>
               </tr>
@@ -204,12 +204,12 @@ const CompanyDetails = () => {
                 .filter((s) => s.name?.toLowerCase().includes(searchShortlisted.toLowerCase()))
                 .map((student, i) => (
                   <tr key={student._id}>
-                    <td>
+                    {/* <td>
                       <input
                         type="checkbox"
                         onChange={() => handleCheckboxChange(student._id, 'shortlisted')}
                       />
-                    </td>
+                    </td> */}
                     <td>{`0${i + 1}`}</td>
                     <td>{student.name}</td>
                   </tr>

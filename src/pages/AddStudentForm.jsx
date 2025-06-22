@@ -122,7 +122,7 @@ const AddStudent = () => {
           />
         </div>
 
-        <div className="form-grid">
+        {/* <div className="form-grid">
           <label htmlFor="resumeUploaded">Resume Uploaded</label>
           <span>:</span>
           <select
@@ -134,9 +134,9 @@ const AddStudent = () => {
             <option value="No">No</option>
             <option value="Yes">Yes</option>
           </select>
-        </div>
+        </div> */}
 
-        <div className="form-grid">
+        {/* <div className="form-grid">
           <label htmlFor="appliedCompany">Applied Company</label>
           <span>:</span>
           <select
@@ -153,7 +153,7 @@ const AddStudent = () => {
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
 
         <button type="submit">Submit</button>
       </form>

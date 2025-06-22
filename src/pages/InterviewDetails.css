@@ -240,4 +240,70 @@
     width: 100%;
     text-align: center;
   }
+}.lists-container {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
 }
+
+.list {
+  background-color: #d1f2f7;
+  color: #000;
+  border: 1px solid #ccc;
+  padding: 14px;
+  border-radius: 12px;
+  width: 30%; /* Small fixed width */
+  min-width: 250px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 900px) {
+  .lists-container {
+    flex-direction: column;
+  }
+
+  .list {
+    width: 100%;
+  }
+}
+/* New flex container to hold summary + students table side-by-side */
+.top-section {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+/* Resize summary boxes for side layout */
+.top-section .summary-boxes {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 180px;
+  flex-shrink: 0;
+}
+
+/* Let the student table grow */
+.top-section .all-students-list {
+  flex: 1;
+}
+@media (max-width: 768px) {
+  .top-section {
+    flex-direction: column;
+  }
+
+  .top-section .summary-boxes {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .top-section .all-students-list {
+    width: 100%;
+  }
+}
+

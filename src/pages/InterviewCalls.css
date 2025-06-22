@@ -16,12 +16,6 @@
   margin-bottom: 30px;
   font-size: 28px;
 }
-.status-dropdown {
-  padding: 5px 8px;
-  font-size: 1rem;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
 
 /* Table Styling */
 .interview-calls-table {
@@ -52,9 +46,16 @@
   background-color: #f2f9f9;
 }
 
-/* View button styling */
+/* Button Group in Action Column */
+.interview-calls-table td > .button-group {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* View Button */
 .view-button {
-  display: inline-block;
   background-color: #007b7a;
   color: white;
   padding: 6px 14px;
@@ -62,11 +63,52 @@
   text-decoration: none;
   font-weight: 500;
   font-size: 14px;
+  border: none;
+  cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
 .view-button:hover {
   background-color: #005f5f;
+}
+
+/* Update Button - styled differently */
+.update-button {
+  background-color: #007b7a;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.update-button:hover {
+  background-color: #d48806;
+}
+
+/* Status Dropdown */
+.status-dropdown {
+  padding: 5px 8px;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+/* Error and Loading Messages */
+.loading-msg,
+.error-msg {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 20px;
+  color: #333;
+}
+
+.error-msg {
+  color: red;
 }
 
 /* Company Section Box */
@@ -119,5 +161,16 @@
     display: block;
     overflow-x: auto;
     white-space: nowrap;
+  }
+
+  .interview-calls-table td > .button-group {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .view-button,
+  .update-button {
+    width: 100%;
+    margin-bottom: 5px;
   }
 }

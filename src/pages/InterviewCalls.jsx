@@ -117,14 +117,14 @@ const InterviewCalls = () => {
                       </select>
                     )}
                   </td> */}
-                  <td>
-                    <button
-                      className="view-button"
-                      onClick={() => navigate(`/interview-details/${company._id}`)}
-                    >
-                      View
-                    </button>
-                  </td>
+                              <td>
+  <div className="button-group">
+    <button className="view-button" onClick={() => navigate(`/interview-details/${company._id}`)}>View</button>
+    <button className="update-button" onClick={() => navigate(`/update-company/${company._id}`)}>Update</button>
+  </div>
+</td>
+
+
                 </tr>
               );
             })}

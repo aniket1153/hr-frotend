@@ -204,7 +204,7 @@ const handleSubmit = async (e) => {
           />
         </div>
 
-        <div className="form-row">
+        {/* <div className="form-row">
           <label>Job Positions & Opening Dates</label>
           {formData.positions.map((pos, index) => (
             <div key={index} className="position-row">
@@ -246,7 +246,7 @@ const handleSubmit = async (e) => {
             onChange={handleChange}
             required
           />
-        </div>
+        </div> */}
 
         <button type="submit">Submit</button>
       </form>

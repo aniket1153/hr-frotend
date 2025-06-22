@@ -18,6 +18,7 @@ import Unauthorized from "./components/Unauthorized";
 import Report from "./pages/Report";
 import EditCompany from "./pages/EditCompany";
 import PlacementReport from "./pages/PlacementReport";
+import UpdateCompany from "./pages/UpdateCompany";
 
 
 function App() {
@@ -154,6 +155,7 @@ function App() {
   }
 />
 
+<Route path="/update-company/:id" element={<UpdateCompany />} />
 
       </Routes>
     </Router>
