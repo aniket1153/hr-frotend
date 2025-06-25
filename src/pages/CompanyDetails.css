@@ -1,181 +1,208 @@
+/* General Layout */
 .company-details-card {
-  background-color: #f5faff;
   padding: 20px;
-  border-radius: 12px;
-  max-width: 1200px;
-  margin: 20px auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8fafc;
+  color: #1f2937;
 }
 
 .company-title {
   font-size: 28px;
-  font-weight: 600;
+  font-weight: bold;
+  color: #14532d;
   margin-bottom: 20px;
-  color: #1e3a8a;
-  text-align: center;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 10px;
 }
 
-/* HR Info & History Section */
-.company-details-header {
+.company-info-history-wrapper {
   display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 40px;
+  margin-bottom: 30px;
 }
 
-.company-info {
+.company-info, .job-history {
   flex: 1;
-  background: #ffffff;
-  padding: 16px;
-  border-radius: 10px;
-  font-size: 15px;
-  color: #333;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  min-width: 280px;
 }
 
 .company-info p {
   margin: 8px 0;
+  font-size: 15px;
 }
 
-.company-history {
-  flex: 1;
-  background: #04344e;
-  color: white;
-  padding: 16px;
-  border-radius: 10px;
-  font-size: 14px;
-}
-
-.company-history h4 {
+.job-history h4 {
   margin-bottom: 10px;
-  font-size: 16px;
-  border-bottom: 1px solid #fff;
-  padding-bottom: 5px;
+  color: #065f46;
 }
 
-.company-history table {
+.job-history table {
   width: 100%;
   border-collapse: collapse;
-  color: white;
+  background-color:#197071;
+  border-radius: 8px;
+  overflow: hidden;
 }
-
-.company-history th,
-.company-history td {
-  padding: 8px;
+.tblw{
+    background-color: #079d9f;
+}
+.job-history th,
+.job-history td {
+  padding: 8px 12px;
   text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  border-bottom: 1px solid #197071;
 }
 
-/* Summary Boxes */
 .summary-boxes {
   display: flex;
-  justify-content: space-around;
-  margin: 20px 0;
-}
-
-.box {
-  background: #e0f2fe;
-  padding: 15px 25px;
-  border-radius: 10px;
-  text-align: center;
-  flex: 1;
-  margin: 0 10px;
-}
-
-.box h2 {
-  margin: 0;
-  color: #0c4a6e;
-  font-size: 28px;
-}
-
-.box span {
-  color: #0369a1;
-}
-
-/* Student Status Section */
-.student-status-row {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
   gap: 20px;
+  margin-bottom: 30px;
 }
 
-.student-list-card {
+.summary-boxes .box {
   flex: 1;
-  min-width: 250px;
-  background: #ffffff;
-  padding: 16px;
-  border-radius: 10px;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
-}
-
-.student-list-card h4 {
-  margin-bottom: 10px;
-  font-size: 16px;
-  color: #1e293b;
-}
-
-.student-list-card input {
-  width: 100%;
-  padding: 6px;
-  margin-bottom: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-.student-list-card table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.student-list-card th,
-.student-list-card td {
-  padding: 6px 8px;
-  border-bottom: 1px solid #ddd;
-  font-size: 14px;
-}
-
-/* Buttons */
-.move-btn {
-  margin-top: 10px;
-  width: 100%;
-  padding: 8px;
-  background: #1e40af;
+  background: #197071;
+  padding: 20px;
+  border-radius: 12px;
   color: white;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+}
+
+.summary-boxes .box h2 {
+  font-size: 32px;
+  margin: 0;
+}
+
+.summary-boxes .box span {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* Student Status Sections */
+
+
+.submit-report-btn {
+  background-color: white !important;
+  color: black !important;
+  padding: 8px 14px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-weight: 500;
+  transition: background 0.3s ease;
+  font-size: 14px;
 }
 
-.move-btn:hover {
-  background: #1e3a8a;
+.submit-report-btn:hover {
+  background-color: white;
 }
 
 .update-btn-wrap {
   text-align: center;
-  margin-top: 25px;
+  margin-top: 20px;
 }
 
 .update-btn {
   background-color: #16a34a;
   color: white;
-  padding: 10px 20px;
-  font-size: 15px;
+  padding: 10px 24px;
   border: none;
   border-radius: 8px;
+  font-size: 16px;
   cursor: pointer;
+  transition: background 0.3s ease;
 }
 
 .update-btn:hover {
   background-color: #15803d;
 }
 
-/* Loading & Error */
+/* Loading/Error States */
 .spinner,
 .error-message {
   text-align: center;
   font-size: 18px;
-  color: #475569;
+  margin: 20px;
+  color: #dc2626;
+}
+
+/* Prevent Scrollbars on Tables */
+table {
+  overflow: hidden;
+}
+
+.student-list-card table::-webkit-scrollbar {
+  display: none;
+}
+.student-status-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
   margin-top: 20px;
+}
+
+.student-list-card {
+  flex: 1 1 calc(33.33% - 20px); /* Three side-by-side */
+  min-width: 280px;
+  box-sizing: border-box;
+  background-color: #068e90;
+  padding: 16px;
+  border-radius: 12px;
+  color: white;
+  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.2);
+  display: flex;
+  flex-direction: column;
+  max-height: 600px;
+}
+
+.student-list-card h4 {
+  margin-bottom: 12px;
+  font-size: 18px;
+  color: white;
+}
+
+.student-list-card input[type="text"] {
+  width: 100%;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  border: 1px solid #045e5f;
+  border-radius: 8px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.student-list-card table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #197071;
+  color: white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.student-list-card th,
+.student-list-card td {
+  padding: 10px 8px;
+  text-align: left;
+  border-bottom: 1px solid #1a6b6c;
+  font-size: 14px;
+}
+
+.student-list-card th {
+  background-color: #197071;
+  font-weight: bold;
+}
+
+.student-list-card td input[type="checkbox"] {
+  transform: scale(1.2);
+}
+
+/* Responsive fix */
+@media (max-width: 900px) {
+  .student-list-card {
+    flex: 1 1 100%;
+  }
 }

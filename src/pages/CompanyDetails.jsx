@@ -18,6 +18,9 @@ const CompanyDetails = () => {
   const [searchShortlisted, setSearchShortlisted] = useState('');
   const [searchPlaced, setSearchPlaced] = useState('');
 
+  const [selectedApplied, setSelectedApplied] = useState([]);
+  const [selectedShortlisted, setSelectedShortlisted] = useState([]);
+
   useEffect(() => {
     fetchData();
   }, [id]);
@@ -51,11 +54,27 @@ const CompanyDetails = () => {
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      await fetchData();
-      toast.success('Status updated successfully!');
     } catch (err) {
-      toast.error('Failed to update status');
+      toast.error(`Failed to update status for student ID: ${studentId}`);
     }
+  };
+
+  const handleSubmitToShortlisted = async () => {
+    for (const id of selectedApplied) {
+      await updateStatus(id, 'shortlisted');
+    }
+    toast.success('Students moved to Shortlisted!');
+    setSelectedApplied([]);
+    fetchData();
+  };
+
+  const handleSubmitToPlaced = async () => {
+    for (const id of selectedShortlisted) {
+      await updateStatus(id, 'placed');
+    }
+    toast.success('Students moved to Placed!');
+    setSelectedShortlisted([]);
+    fetchData();
   };
 
   const handleSubmitReport = async () => {
@@ -80,21 +99,15 @@ const CompanyDetails = () => {
     }
   };
 
-  const handleMoveToShortlisted = async () => {
-    const filtered = appliedStudents.filter((s) =>
-      s.name?.toLowerCase().includes(searchApplied.toLowerCase())
-    );
-    for (const student of filtered) {
-      await updateStatus(student._id, 'shortlisted');
-    }
-  };
-
-  const handleMoveToPlaced = async () => {
-    const filtered = shortlistedStudents.filter((s) =>
-      s.name?.toLowerCase().includes(searchShortlisted.toLowerCase())
-    );
-    for (const student of filtered) {
-      await updateStatus(student._id, 'placed');
+  const toggleSelection = (id, listType) => {
+    if (listType === 'applied') {
+      setSelectedApplied((prev) =>
+        prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]
+      );
+    } else if (listType === 'shortlisted') {
+      setSelectedShortlisted((prev) =>
+        prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]
+      );
     }
   };
 
@@ -111,7 +124,6 @@ const CompanyDetails = () => {
     platform,
     lastOpeningDate,
     requirements,
-    history
   } = company;
 
   const appliedStudents = students.filter(
@@ -124,57 +136,73 @@ const CompanyDetails = () => {
     (s) => s.appliedCompany === companyName && s.status?.toLowerCase() === 'placed'
   );
 
-  const resumesSentCount = students.filter((s) => s.appliedCompany === companyName).length;
+  const resumesSentCount = students.filter(
+    (s) => s.appliedCompany === companyName
+  ).length;
 
   const formatDate = (date) => {
     const d = new Date(date);
     return isNaN(d.getTime()) ? 'N/A' : d.toLocaleDateString();
   };
+jobHistory: [
+  {
+    "position": "Frontend Developer",
+    "openingDate": "2024-10-01"
+  },
+  {
+    "position": "Backend Intern",
+    "openingDate": "2024-12-15"
+  }
+]
 
   return (
     <div className="company-details-card">
       <ToastContainer />
       <h2 className="company-title">{companyName || 'Company Name'}</h2>
 
-      {/* HR Info & History */}
-      <div className="company-details-header">
-        <div className="company-info">
-          <p><strong>HR Name</strong> : {hrName}</p>
-          <p><strong>Mail ID</strong> : {email}</p>
-          <p><strong>Contact</strong> : {contact}</p>
-          <p><strong>Location</strong> : {location}</p>
-          <p><strong>Platform</strong> : {platform}</p>
-          <p><strong>Last Opening Date</strong> : {formatDate(lastOpeningDate)}</p>
-        </div>
+      <div className="company-info-history-wrapper">
+  {/* Company Info Section */}
+  <div className="company-info">
+    <p><strong>HR Name</strong> : {hrName}</p>
+    <p><strong>Mail ID</strong> : {email}</p>
+    <p><strong>Contact</strong> : {contact}</p>
+    <p><strong>Location</strong> : {location}</p>
+    <p><strong>Platform</strong> : {platform}</p>
+    <p><strong>Last Opening Date</strong> : {formatDate(lastOpeningDate)}</p>
+  </div>
 
-        <div className="company-history">
-          <h4>History</h4>
-          <table>
-            <thead>
-              <tr>
-                <th>Opening For</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {history && history.length > 0 ? (
-                history.map((item, i) => (
-                  <tr key={i}>
-                    <td>{item.position}</td>
-                    <td>{formatDate(item.date)}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="2">No history available</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+  {/* New Job History Table Section */}
+  {/* Job History Table Section - Updated to use "positions" */} 
+<div className="job-history">
+  <h4>Job History</h4>
+  <table>
+    <thead>
+      <tr className="tblw">
+        <th>Position</th>
+        <th>Opening Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {company?.positions?.length > 0 ? (
+        company.positions.map((job, index) => (
+          <tr key={index}>
+            <td>{job.positionName}</td>
+            <td>{formatDate(job.openingDate)}</td>
+          </tr>
+        ))
+      ) : (
+        <tr>
+          <td colSpan="2">No history available</td>
+        </tr>
+      )}
+    </tbody>
+  </table>
+</div>
 
-      {/* Summary Boxes */}
+
+</div>
+
+
       <div className="summary-boxes">
         <div className="box">
           <h2>{requirements || '00'}</h2>
@@ -186,9 +214,8 @@ const CompanyDetails = () => {
         </div>
       </div>
 
-      {/* Students Section */}
       <div className="student-status-row">
-        {/* Applied */}
+        {/* Applied Students */}
         <div className="student-list-card">
           <h4>Applied Students</h4>
           <input
@@ -200,6 +227,7 @@ const CompanyDetails = () => {
           <table>
             <thead>
               <tr>
+                <th>✔</th>
                 <th>SrNo</th>
                 <th>Name</th>
               </tr>
@@ -209,18 +237,25 @@ const CompanyDetails = () => {
                 .filter((s) => s.name?.toLowerCase().includes(searchApplied.toLowerCase()))
                 .map((student, i) => (
                   <tr key={student._id}>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={selectedApplied.includes(student._id)}
+                        onChange={() => toggleSelection(student._id, 'applied')}
+                      />
+                    </td>
                     <td>{i + 1}</td>
                     <td>{student.name}</td>
                   </tr>
                 ))}
             </tbody>
           </table>
-          <button className="move-btn" onClick={handleMoveToShortlisted}>
-            Move to Shortlisted
+          <button className="submit-report-btn" onClick={handleSubmitToShortlisted}>
+            Submit to Shortlisted
           </button>
         </div>
 
-        {/* Shortlisted */}
+        {/* Shortlisted Students */}
         <div className="student-list-card">
           <h4>Shortlisted Students</h4>
           <input
@@ -232,6 +267,7 @@ const CompanyDetails = () => {
           <table>
             <thead>
               <tr>
+                <th>✔</th>
                 <th>SrNo</th>
                 <th>Name</th>
               </tr>
@@ -241,18 +277,25 @@ const CompanyDetails = () => {
                 .filter((s) => s.name?.toLowerCase().includes(searchShortlisted.toLowerCase()))
                 .map((student, i) => (
                   <tr key={student._id}>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={selectedShortlisted.includes(student._id)}
+                        onChange={() => toggleSelection(student._id, 'shortlisted')}
+                      />
+                    </td>
                     <td>{i + 1}</td>
                     <td>{student.name}</td>
                   </tr>
                 ))}
             </tbody>
           </table>
-          <button className="move-btn" onClick={handleMoveToPlaced}>
-            Move to Placed
+          <button className="submit-report-btn" onClick={handleSubmitToPlaced}>
+            Submit to Placed
           </button>
         </div>
 
-        {/* Placed */}
+        {/* Placed Students */}
         <div className="student-list-card">
           <h4>Placed Students</h4>
           <input
