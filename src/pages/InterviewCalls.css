@@ -104,6 +104,12 @@
   align-items: center;
   gap: 8px;
 }
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
 
 .add-btn:hover {
   background-color: #218838;

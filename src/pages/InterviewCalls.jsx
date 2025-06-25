@@ -72,10 +72,13 @@ const InterviewCalls = () => {
 
   return (
     <div className="interview-calls-container">
-      <h1>Interview Calls</h1>
-      <button className="add-btn" onClick={() => navigate('/create-company')}>
+     <div className="top-bar">
+  <h1>Interview Calls</h1>
+  <button className="add-btn" onClick={() => navigate('/create-company')}>
     <FaPlus /> Add Company
   </button>
+</div>
+
       <ToastContainer />
       {companies.length === 0 ? (
         <p>No interview calls found.</p>
