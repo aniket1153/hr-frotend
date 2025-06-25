@@ -22,6 +22,10 @@
 .input-group {
   margin-bottom: 15px;
 }
+.login-form .btn1 {
+  background-color: #007b7a !important;
+  color: white !important;
+}
 
 .input-group label {
   font-size: 14px;
@@ -37,6 +41,7 @@
   border-radius: 4px;
 }
 
+/* Remove this if only using .btn1 styling */
 button {
   background-color: #007b7a;
   color: white;
