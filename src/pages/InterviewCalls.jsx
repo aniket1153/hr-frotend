@@ -4,6 +4,8 @@ import axiosInstance from '../axiosInstance';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './InterviewCalls.css';
+import { FaPlus } from 'react-icons/fa';
+
 
 const InterviewCalls = () => {
   const [companies, setCompanies] = useState([]);
@@ -71,6 +73,9 @@ const InterviewCalls = () => {
   return (
     <div className="interview-calls-container">
       <h1>Interview Calls</h1>
+      <button className="add-btn" onClick={() => navigate('/create-company')}>
+    <FaPlus /> Add Company
+  </button>
       <ToastContainer />
       {companies.length === 0 ? (
         <p>No interview calls found.</p>

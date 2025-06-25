@@ -1,178 +1,181 @@
-/* Card Wrapper */
 .company-details-card {
-  background-color: #026773;
-  color: white;
-  border-radius: 15px;
-  padding: 30px;
-  max-width: 750px;
-  margin: 40px auto;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  font-family: 'Segoe UI', sans-serif;
+  background-color: #f5faff;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 1200px;
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Title */
 .company-title {
-  font-size: 26px;
-  font-weight: bold;
-  margin-bottom: 25px;
-  text-align: left;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #1e3a8a;
+  text-align: center;
 }
 
-/* Info Section */
+/* HR Info & History Section */
+.company-details-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.company-info {
+  flex: 1;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 10px;
+  font-size: 15px;
+  color: #333;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
 .company-info p {
   margin: 8px 0;
-  font-size: 15px;
 }
 
-.company-info p strong {
-  width: 140px;
-  display: inline-block;
-}
-
-/* Dropdown Buttons */
-.dropdowns {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.dropdown-btn {
-  background-color: #026773;
+.company-history {
+  flex: 1;
+  background: #04344e;
   color: white;
-  padding: 10px 16px;
-  font-weight: 600;
-  border: 1px solid white;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-  box-shadow: none;
-  outline: none;
-}
-
-.dropdown-btn:hover {
-  background-color: #035d5d;
-}
-
-/* Dropdown Section Wrapper */
-.dropdown-section {
-  width: 100%;
-  margin-top: 16px;
-  box-sizing: border-box;
-}
-
-/* Dropdown Content Box */
-.dropdown-content {
-  background-color: #024d4d;
-  color: white;
-  padding: 16px 20px;
-  margin-top: 10px;
+  padding: 16px;
   border-radius: 10px;
-  max-height: 260px;
-  overflow-y: auto;
-  overflow-x: hidden;
   font-size: 14px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  box-sizing: border-box;
 }
 
-/* Search Input */
-.dropdown-content input[type="text"] {
-  margin-bottom: 12px;
-  padding: 8px 10px;
-  width: 100%;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  color: #000;
-  font-size: 14px;
-  box-sizing: border-box;
+.company-history h4 {
+  margin-bottom: 10px;
+  font-size: 16px;
+  border-bottom: 1px solid #fff;
+  padding-bottom: 5px;
 }
 
-/* Table Inside Dropdown */
-.dropdown-content table {
+.company-history table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
-}
-
-.dropdown-content th,
-.dropdown-content td {
-  padding: 10px 8px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
   color: white;
-  word-wrap: break-word;
 }
 
-.dropdown-content th {
-  background-color: #026773;
-  font-weight: 600;
+.company-history th,
+.company-history td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.dropdown-content tr:nth-child(even) {
-  background-color: rgba(255, 255, 255, 0.05);
+/* Summary Boxes */
+.summary-boxes {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
 }
 
-/* Update Button */
+.box {
+  background: #e0f2fe;
+  padding: 15px 25px;
+  border-radius: 10px;
+  text-align: center;
+  flex: 1;
+  margin: 0 10px;
+}
+
+.box h2 {
+  margin: 0;
+  color: #0c4a6e;
+  font-size: 28px;
+}
+
+.box span {
+  color: #0369a1;
+}
+
+/* Student Status Section */
+.student-status-row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.student-list-card {
+  flex: 1;
+  min-width: 250px;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.student-list-card h4 {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #1e293b;
+}
+
+.student-list-card input {
+  width: 100%;
+  padding: 6px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.student-list-card table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.student-list-card th,
+.student-list-card td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+}
+
+/* Buttons */
+.move-btn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 8px;
+  background: #1e40af;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.move-btn:hover {
+  background: #1e3a8a;
+}
+
 .update-btn-wrap {
-  text-align: right;
+  text-align: center;
   margin-top: 25px;
 }
 
 .update-btn {
-  background-color: white;
-  color: #026773;
+  background-color: #16a34a;
+  color: white;
   padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: bold;
+  font-size: 15px;
   border: none;
+  border-radius: 8px;
   cursor: pointer;
 }
 
 .update-btn:hover {
-  background-color: #cde8e8;
+  background-color: #15803d;
 }
 
-/* Spinner or error message (optional, if used) */
-.spinner, .error-message {
+/* Loading & Error */
+.spinner,
+.error-message {
   text-align: center;
-  padding: 20px;
-  font-weight: bold;
-  color: #ffffff;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .company-details-card {
-    padding: 20px;
-  }
-
-  .dropdowns {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .dropdown-btn {
-    width: 100%;
-    text-align: center;
-  }
-
-  .company-title {
-    font-size: 22px;
-    text-align: center;
-  }
-
-  .company-info p strong {
-    width: 120px;
-  }
-
-  .update-btn-wrap {
-    text-align: center;
-  }
-
-  .update-btn {
-    width: 100%;
-  }
+  font-size: 18px;
+  color: #475569;
+  margin-top: 20px;
 }

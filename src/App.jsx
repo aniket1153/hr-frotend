@@ -19,6 +19,7 @@ import Report from "./pages/Report";
 import EditCompany from "./pages/EditCompany";
 import PlacementReport from "./pages/PlacementReport";
 import UpdateCompany from "./pages/UpdateCompany";
+import CreateCompany from "./pages/CreateCompany";
 
 
 function App() {
@@ -154,6 +155,7 @@ function App() {
     </RequireAuth>
   }
 />
+<Route path="/create-company" element={<CreateCompany />} />
 
 <Route path="/update-company/:id" element={<UpdateCompany />} />
 

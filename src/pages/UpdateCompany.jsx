@@ -141,7 +141,7 @@ const UpdateCompany = () => {
           )}
         </div>
 
-        <div className="form-row">
+        {/* <div className="form-row">
           <label>Last Opening Date</label>
           <input
             type="date"
@@ -150,7 +150,7 @@ const UpdateCompany = () => {
             onChange={handleChange}
             required
           />
-        </div>
+        </div> */}
 
         <button type="submit">Update</button>
       </form>
