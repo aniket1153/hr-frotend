@@ -184,89 +184,92 @@ const InterviewDetail = () => {
       </div>
 
       {/* All Students Table */}
-      <div className="all-students-list list">
-        <h4 onClick={() => setShowAllStudents(!showAllStudents)}>
-          All Students {showAllStudents ? '▲' : '▼'}
-        </h4>
-        {showAllStudents && (
-          <>
-            <div className="search-bar">
-              <input
-                type="text"
-                placeholder="Search Student"
-                value={searchAllStudents}
-                onChange={(e) => setSearchAllStudents(e.target.value)}
-              />
-            </div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Select</th>
-                  <th>Sr.No</th>
-                  <th>Name</th>
-                  <th>Contact</th>
-                  <th>Mail ID</th>
-                  <th>Resume</th>
-                </tr>
-              </thead>
-              <tbody>
-                {students
-                  .filter((s) => {
-                    const isAlreadyApplied = s.appliedCompany === companyName &&
-                      ['applied', 'shortlisted', 'placed'].includes(s.status?.toLowerCase());
-
-                    const matchesSearch =
-                      s.name?.toLowerCase().includes(searchAllStudents.toLowerCase()) ||
-                      s.email?.toLowerCase().includes(searchAllStudents.toLowerCase()) ||
-                      s.contact?.includes(searchAllStudents);
-
-                    return !isAlreadyApplied && matchesSearch;
-                  })
-                  .map((student, i) => (
-                    <tr key={student._id}>
-                      <td>
-                        <input
-                          type="checkbox"
-                          checked={selectedStudentIds.includes(student._id)}
-                          onChange={(e) => {
-                            const updated = e.target.checked
-                              ? [...selectedStudentIds, student._id]
-                              : selectedStudentIds.filter((id) => id !== student._id);
-                            setSelectedStudentIds(updated);
-                          }}
-                        />
-                      </td>
-                      <td>{i + 1}</td>
-                      <td>{student.name}</td>
-                      <td>{student.contact}</td>
-                      <td>{student.email}</td>
-                      <td>
-                        {student.resumeUrl ? (
-                          <a href={student.resumeUrl} target="_blank" rel="noopener noreferrer">
-                            Uploaded
-                          </a>
-                        ) : (
-                          'Not Uploaded'
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-            <div style={{ textAlign: 'right', marginTop: '10px' }}>
-              <button
-                className="submit-report-btn"
-                disabled={selectedStudentIds.length === 0}
-                onClick={handleApplySelectedStudents}
-              >
-                Submit to Applied
-              </button>
-            </div>
-          </>
-        )}
-      </div>
+      
 </div>
-      <div className="lists-container">
+  <div className="all-lists-row">
+  {/* All Students */}
+  <div className="list">
+    <h4 onClick={() => setShowAllStudents(!showAllStudents)}>
+      All Students {showAllStudents ? '▲' : '▼'}
+    </h4>
+    {showAllStudents && (
+      <>
+        <div className="search-bar">
+          <input
+            type="text"
+            placeholder="Search Student"
+            value={searchAllStudents}
+            onChange={(e) => setSearchAllStudents(e.target.value)}
+          />
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Sr.No</th>
+              <th>Select</th>
+              
+              <th>Name</th>
+              <th>Contact</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {students
+              .filter((s) => {
+                const isAlreadyApplied = s.appliedCompany === companyName &&
+                  ['applied', 'shortlisted', 'placed'].includes(s.status?.toLowerCase());
+                const matchesSearch =
+                  s.name?.toLowerCase().includes(searchAllStudents.toLowerCase()) ||
+                  s.email?.toLowerCase().includes(searchAllStudents.toLowerCase()) ||
+                  s.contact?.includes(searchAllStudents);
+                return !isAlreadyApplied && matchesSearch;
+              })
+              .map((student, i) => (
+                
+                <tr key={student._id}>
+                    <td>{i + 1}</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={selectedStudentIds.includes(student._id)}
+                      onChange={(e) => {
+                        const updated = e.target.checked
+                          ? [...selectedStudentIds, student._id]
+                          : selectedStudentIds.filter((id) => id !== student._id);
+                        setSelectedStudentIds(updated);
+                      }}
+                    />
+                  </td>
+                
+                  <td>{student.name}</td>
+                  <td>{student.contact}</td>
+                  {/* <td>{student.email}</td> */}
+                  {/* <td>
+                    {student.resumeUrl ? (
+                      <a href={student.resumeUrl} target="_blank" rel="noopener noreferrer">
+                        Uploaded
+                      </a>
+                    ) : (
+                      'Not Uploaded'
+                    )}
+                  </td> */}
+                </tr>
+              ))}
+          </tbody>
+        </table>
+        <div style={{ textAlign: 'right', marginTop: '10px' }}>
+          <button
+            className="submit-report-btn"
+            disabled={selectedStudentIds.length === 0}
+            onClick={handleApplySelectedStudents}
+          >
+            Submit to Applied
+          </button>
+        </div>
+      </>
+    )}
+  </div>
+
   {/* Applied Students */}
   <div className="list">
     <h4 onClick={() => setShowApplied(!showApplied)}>
@@ -285,8 +288,9 @@ const InterviewDetail = () => {
         <table>
           <thead>
             <tr>
-              <th>Select</th>
               <th>SrNo</th>
+              <th>Select</th>
+              
               <th>Name</th>
             </tr>
           </thead>
@@ -296,7 +300,9 @@ const InterviewDetail = () => {
                 s.name?.toLowerCase().includes(searchApplied.toLowerCase())
               )
               .map((student, i) => (
+
                 <tr key={student._id}>
+                  <td>{`0${i + 1}`}</td>
                   <td>
                     <input
                       type="checkbox"
@@ -309,7 +315,7 @@ const InterviewDetail = () => {
                       }}
                     />
                   </td>
-                  <td>{`0${i + 1}`}</td>
+                  
                   <td>{student.name}</td>
                 </tr>
               ))}
@@ -346,8 +352,9 @@ const InterviewDetail = () => {
         <table>
           <thead>
             <tr>
-              <th>Select</th>
               <th>SrNo</th>
+              <th>Select</th>
+              
               <th>Name</th>
             </tr>
           </thead>
@@ -358,7 +365,9 @@ const InterviewDetail = () => {
               )
               .map((student, i) => (
                 <tr key={student._id}>
+                   <td>{`0${i + 1}`}</td>
                   <td>
+                    
                     <input
                       type="checkbox"
                       checked={selectedFromShortlisted.includes(student._id)}
@@ -370,7 +379,7 @@ const InterviewDetail = () => {
                       }}
                     />
                   </td>
-                  <td>{`0${i + 1}`}</td>
+                 
                   <td>{student.name}</td>
                 </tr>
               ))}
@@ -428,6 +437,7 @@ const InterviewDetail = () => {
     )}
   </div>
 </div>
+
 
       {/* Footer */}
       <div className="final-actions">

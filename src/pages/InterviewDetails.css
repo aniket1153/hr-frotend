@@ -64,11 +64,13 @@
 .box h2 {
   font-size: 36px;
   margin: 0;
+  color: white;
 }
 
 .box span {
   font-size: 16px;
   margin-top: 5px;
+  color: white;
 }
 
 /* Main Table (Candidates) */
@@ -307,3 +309,53 @@
   }
 }
 
+.all-lists-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.all-lists-row .list {
+  flex: 1;
+  min-width: 250px;
+  max-width: 24%;
+  background-color: #d1f2f7;
+  color: #000;
+  border: 1px solid #ccc;
+  padding: 14px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Behavior */
+@media (max-width: 1024px) {
+  .all-lists-row .list {
+    max-width: 48%;
+  }
+}
+
+@media (max-width: 768px) {
+  .all-lists-row {
+    flex-direction: column;
+  }
+
+  .all-lists-row .list {
+    max-width: 100%;
+  }
+}
+.list table td,
+.list table th {
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.list td:nth-child(4),  /* Contact */
+.list td:nth-child(5),  /* Mail ID */
+.list td:nth-child(6) { /* Resume */
+  max-width: 120px;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
