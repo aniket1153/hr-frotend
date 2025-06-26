@@ -10,8 +10,8 @@
 }
 
 .add-company-container h2 {
-  background-color: #007b7a;
-  color: #ffffff;
+  background-color: #007b7a !important;
+  color: #ffffff !important;
   padding: 12px 25px;
   display: inline-block;
   border-radius: 6px;

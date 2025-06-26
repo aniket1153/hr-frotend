@@ -18,8 +18,8 @@ const EditCompany = () => {
     platform: '',
     other: '',
     companyHistory: '',
-    positions: [{ positionName: '', openingDate: '' }],
-    lastOpeningDate: '',
+    // positions: [{ positionName: '', openingDate: '' }],
+    // lastOpeningDate: '',
   });
 
   useEffect(() => {
@@ -46,27 +46,27 @@ const EditCompany = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handlePositionChange = (index, e) => {
-    const newPositions = [...formData.positions];
-    newPositions[index][e.target.name] = e.target.value;
-    setFormData({ ...formData, positions: newPositions });
-  };
+  // const handlePositionChange = (index, e) => {
+  //   const newPositions = [...formData.positions];
+  //   newPositions[index][e.target.name] = e.target.value;
+  //   setFormData({ ...formData, positions: newPositions });
+  // };
 
-  const addPosition = () => {
-    if (formData.positions.length < 5) {
-      setFormData({
-        ...formData,
-        positions: [...formData.positions, { positionName: '', openingDate: '' }],
-      });
-    } else {
-      toast.info('You can add up to 5 positions only.');
-    }
-  };
+  // const addPosition = () => {
+  //   if (formData.positions.length < 5) {
+  //     setFormData({
+  //       ...formData,
+  //       positions: [...formData.positions, { positionName: '', openingDate: '' }],
+  //     });
+  //   } else {
+  //     toast.info('You can add up to 5 positions only.');
+  //   }
+  // };
 
-  const removePosition = (index) => {
-    const newPositions = formData.positions.filter((_, i) => i !== index);
-    setFormData({ ...formData, positions: newPositions });
-  };
+  // const removePosition = (index) => {
+  //   const newPositions = formData.positions.filter((_, i) => i !== index);
+  //   setFormData({ ...formData, positions: newPositions });
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -127,7 +127,7 @@ const EditCompany = () => {
           <textarea name="companyHistory" value={formData.companyHistory} onChange={handleChange} />
         </div>
 
-        <div className="form-row">
+        {/* <div className="form-row">
           <label>Positions & Opening Dates</label>
           {formData.positions.map((pos, index) => (
             <div className="position-row" key={index}>
@@ -164,7 +164,7 @@ const EditCompany = () => {
             onChange={handleChange}
             required
           />
-        </div>
+        </div> */}
 
         <button type="submit" className="submit-btn"  onClick={() => navigate('/view-companies')}>Update Company</button>
       </form>
