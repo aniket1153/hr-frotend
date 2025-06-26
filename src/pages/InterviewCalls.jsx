@@ -6,9 +6,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import './InterviewCalls.css';
 import { FaPlus } from 'react-icons/fa';
 
-
 const InterviewCalls = () => {
   const [companies, setCompanies] = useState([]);
+  const [highlightedCompanyId, setHighlightedCompanyId] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -25,7 +25,37 @@ const InterviewCalls = () => {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => {
-        setCompanies(res.data);
+        const allCompanies = res.data;
+        const lastCreatedId = localStorage.getItem('lastCreatedCompanyId');
+        const lastUpdatedId = localStorage.getItem('lastUpdatedCompanyId');
+
+        let finalCompanies = allCompanies;
+
+        if (lastCreatedId || lastUpdatedId) {
+          const highlightId = lastCreatedId || lastUpdatedId;
+          const targetCompany = allCompanies.find(c => c._id === highlightId);
+          if (targetCompany) {
+            finalCompanies = [
+              targetCompany,
+              ...allCompanies.filter(c => c._id !== highlightId)
+            ];
+            setHighlightedCompanyId(highlightId);
+          }
+
+          // Show a toast only for update case
+          if (lastUpdatedId) {
+            toast.success('✅ Company updated successfully!');
+          }
+
+          // Cleanup after 5 seconds
+          setTimeout(() => {
+            localStorage.removeItem('lastCreatedCompanyId');
+            localStorage.removeItem('lastUpdatedCompanyId');
+            setHighlightedCompanyId('');
+          }, 5000);
+        }
+
+        setCompanies(finalCompanies);
         setLoading(false);
       })
       .catch(err => {
@@ -41,8 +71,6 @@ const InterviewCalls = () => {
       toast.error('Authentication token missing. Please login.');
       return;
     }
-
-    console.log("Updating status:", { companyId, positionId, newStatus });
 
     axiosInstance.put(`/api/companies/${companyId}/positions/${positionId}/status`, 
       { status: newStatus }, 
@@ -72,12 +100,12 @@ const InterviewCalls = () => {
 
   return (
     <div className="interview-calls-container">
-     <div className="top-bar">
-  <h1>Interview Calls</h1>
-  <button className="add-btn" onClick={() => navigate('/create-company')}>
-    <FaPlus /> Add Company
-  </button>
-</div>
+      <div className="top-bar">
+        <h1>Interview Calls</h1>
+        <button className="add-btn" onClick={() => navigate('/create-company')}>
+          <FaPlus /> Add Company
+        </button>
+      </div>
 
       <ToastContainer />
       {companies.length === 0 ? (
@@ -91,8 +119,6 @@ const InterviewCalls = () => {
               <th>Position</th>
               <th>Date</th>
               <th>No. of Calls</th>
-              {/* <th>Current Status Of Company</th>
-              <th>Update Status</th> */}
               <th>Action</th>
             </tr>
           </thead>
@@ -102,37 +128,27 @@ const InterviewCalls = () => {
                 ? company.positions[0]
                 : null;
 
+              const isHighlighted = company._id === highlightedCompanyId;
+
               return (
-                <tr key={company._id}>
+                <tr
+                  key={company._id}
+                  style={{
+                    backgroundColor: isHighlighted ? '#d1e7dd' : 'transparent',
+                    transition: 'background-color 0.3s ease'
+                  }}
+                >
                   <td>{index + 1}</td>
                   <td>{company.companyName || 'N/A'}</td>
                   <td>{firstPosition?.title || 'N/A'}</td>
                   <td>{company.lastOpeningDate ? new Date(company.lastOpeningDate).toLocaleDateString() : 'N/A'}</td>
                   <td>{company.interviewCalls?.length || 0}</td>
-                  {/* <td>{firstPosition?.status || 'N/A'}</td>
                   <td>
-                    {firstPosition && (
-                      <select
-                        value={firstPosition.status || 'On-going'}
-                        onChange={(e) =>
-                          handleStatusChange(company._id, firstPosition._id, e.target.value)
-                        }
-                        className="status-dropdown"
-                      >
-                        <option value="On-going">On-going</option>
-                        <option value="Closed">Closed</option>
-                        <option value="Hold">Hold</option>
-                      </select>
-                    )}
-                  </td> */}
-                              <td>
-  <div className="button-group">
-    <button className="view-button" onClick={() => navigate(`/interview-details/${company._id}`)}>View</button>
-    <button className="update-button" onClick={() => navigate(`/update-company/${company._id}`)}>Update</button>
-  </div>
-</td>
-
-
+                    <div className="button-group">
+                      <button className="view-button" onClick={() => navigate(`/interview-details/${company._id}`)}>View</button>
+                      <button className="update-button" onClick={() => navigate(`/update-company/${company._id}`)}>Update</button>
+                    </div>
+                  </td>
                 </tr>
               );
             })}

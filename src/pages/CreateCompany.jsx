@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axiosInstance';
@@ -17,7 +16,6 @@ const CreateCompany = () => {
     candidateCount: 0,
   });
 
-  // Fetch company list for dropdown
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
@@ -33,7 +31,6 @@ const CreateCompany = () => {
     fetchCompanies();
   }, []);
 
-  // When company is selected, reset the form (do not prefill old data)
   useEffect(() => {
     if (selectedCompanyId) {
       setFormData({
@@ -75,9 +72,45 @@ const CreateCompany = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axiosInstance.put(`/api/companies/${selectedCompanyId}`, formData, {
+
+      // Step 1: Get existing company data
+      const res = await axiosInstance.get(`/api/companies/${selectedCompanyId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
+      const existingCompany = res.data;
+
+      // Step 2: Merge existing positions with new ones
+      const mergedPositions = [
+        ...existingCompany.positions,
+        ...formData.positions,
+      ];
+
+      // Step 3: Keep lastOpeningDate as latest
+      const lastOpeningDate =
+        new Date(formData.lastOpeningDate) > new Date(existingCompany.lastOpeningDate)
+          ? formData.lastOpeningDate
+          : existingCompany.lastOpeningDate;
+
+      // Step 4: Add candidate count
+      const candidateCount =
+        existingCompany.candidateCount + Number(formData.candidateCount);
+
+      // Step 5: Prepare updated data
+      const updatedData = {
+        positions: mergedPositions,
+        lastOpeningDate,
+        candidateCount,
+      };
+
+      // Step 6: Send PUT request to update the company
+      await axiosInstance.put(`/api/companies/${selectedCompanyId}`, updatedData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // ✅ Store updated company ID in localStorage
+      localStorage.setItem('lastUpdatedCompanyId', selectedCompanyId);
+
       toast.success('✅ Interview call details updated!');
       navigate('/interview-calls');
     } catch (err) {
@@ -88,9 +121,8 @@ const CreateCompany = () => {
 
   return (
     <div className="add-company-container">
-      <h2>Update Interview Call Details</h2>
+      <h2 className='gg'>Update Interview Call Details</h2>
       <form className="company-form" onSubmit={handleSubmit}>
-
         {/* Company dropdown */}
         <div className="form-row">
           <label>Select Company</label>
@@ -135,9 +167,9 @@ const CreateCompany = () => {
               )}
             </div>
           ))}
-          <button type="button" onClick={addPosition}>
+          {/* <button type="button" onClick={addPosition}>
             Add Position
-          </button>
+          </button> */}
         </div>
 
         {/* Last Opening Date */}
