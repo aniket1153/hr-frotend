@@ -14,35 +14,35 @@ const AddCompany = () => {
     platform: '',
     other: '',
     companyHistory: '',
-    positions: [{ positionName: '', openingDate: '' }],
-    lastOpeningDate: '',
+    // positions: [{ positionName: '', openingDate: '' }],
+    // lastOpeningDate: '',
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handlePositionChange = (index, e) => {
-    const newPositions = [...formData.positions];
-    newPositions[index][e.target.name] = e.target.value;
-    setFormData({ ...formData, positions: newPositions });
-  };
+  // const handlePositionChange = (index, e) => {
+  //   const newPositions = [...formData.positions];
+  //   newPositions[index][e.target.name] = e.target.value;
+  //   setFormData({ ...formData, positions: newPositions });
+  // };
 
-  const addPosition = () => {
-    if (formData.positions.length < 5) {
-      setFormData({
-        ...formData,
-        positions: [...formData.positions, { positionName: '', openingDate: '' }],
-      });
-    } else {
-      toast.info('You can add up to 5 positions only.');
-    }
-  };
+  // const addPosition = () => {
+  //   if (formData.positions.length < 5) {
+  //     setFormData({
+  //       ...formData,
+  //       positions: [...formData.positions, { positionName: '', openingDate: '' }],
+  //     });
+  //   } else {
+  //     toast.info('You can add up to 5 positions only.');
+  //   }
+  // };
 
-  const removePosition = (index) => {
-    const newPositions = formData.positions.filter((_, i) => i !== index);
-    setFormData({ ...formData, positions: newPositions });
-  };
+  // const removePosition = (index) => {
+  //   const newPositions = formData.positions.filter((_, i) => i !== index);
+  //   setFormData({ ...formData, positions: newPositions });
+  // };
 
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -67,8 +67,8 @@ const handleSubmit = async (e) => {
         platform: '',
         other: '',
         companyHistory: '',
-        positions: [{ positionName: '', openingDate: '' }],
-        lastOpeningDate: '',
+        // positions: [{ positionName: '', openingDate: '' }],
+        // lastOpeningDate: '',
       });
     }
   } catch (error) {

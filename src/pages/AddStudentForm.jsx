@@ -10,8 +10,8 @@ const AddStudent = () => {
     course: '',
     contact: '',
     email: '',
-    resumeUploaded: false,
-    appliedCompany: '',
+    // resumeUploaded: false,
+    // appliedCompany: '',
   });
 
   const [companies, setCompanies] = useState([]);
@@ -54,8 +54,8 @@ const AddStudent = () => {
         course: '',
         contact: '',
         email: '',
-        resumeUploaded: false,
-        appliedCompany: '',
+        // resumeUploaded: false,
+        // appliedCompany: '',
       });
     } catch (error) {
       toast.error(error.response?.data?.message || 'Error adding student');
