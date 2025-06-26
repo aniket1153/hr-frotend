@@ -143,12 +143,7 @@ const InterviewCalls = () => {
                   <td>{firstPosition?.title || 'N/A'}</td>
                   <td>{company.lastOpeningDate ? new Date(company.lastOpeningDate).toLocaleDateString() : 'N/A'}</td>
                   <td>{company.interviewCalls?.length || 0}</td>
-                  <td>
-                    <div className="button-group">
-                      {/* <button className="view-button" onClick={() => navigate(`/interview-details/${company._id}`)}>View</button> */}
-                      {/* <button className="update-button" onClick={() => navigate(`/update-company/${company._id}`)}>Update</button> */}
-                    </div>
-                  </td>
+                  
                 </tr>
               );
             })}
@@ -160,3 +155,5 @@ const InterviewCalls = () => {
 };
 
 export default InterviewCalls;
+
+
