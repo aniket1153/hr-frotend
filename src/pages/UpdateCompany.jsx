@@ -111,7 +111,7 @@ const UpdateCompany = () => {
         </div>
 
         <div className="form-row">
-          <label>Job Positions & Opening Dates</label>
+          {/* <label>Job Positions & Opening Dates</label> */}
           {formData.positions.map((pos, index) => (
             <div key={index} className="position-row">
               <input
@@ -134,11 +134,11 @@ const UpdateCompany = () => {
               )}
             </div>
           ))}
-          {formData.positions.length < 5 && (
+          {/* {formData.positions.length < 5 && (
             <button type="button" className="add-position-btn" onClick={addPosition}>
               Add Position
             </button>
-          )}
+          )} */}
         </div>
 
         {/* <div className="form-row">
