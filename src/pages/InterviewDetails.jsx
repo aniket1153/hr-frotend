@@ -154,6 +154,11 @@ const InterviewDetail = () => {
   if (error) return <p className="error-msg">{error}</p>;
   if (!company) return <p>No company found.</p>;
 
+
+
+   const handleViewCompany = (id) => {
+    navigate(`/company/${id}`);
+  };
   return (
     <div className="interview-container">
       <ToastContainer position="top-right" autoClose={3000} />

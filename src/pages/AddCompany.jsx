@@ -110,7 +110,7 @@ const handleSubmit = async (e) => {
 
   return (
     <div className="add-company-container">
-      <h2>Add Company</h2>
+      <h2>Add Placment</h2>
 
       <form className="company-form" onSubmit={handleSubmit}>
         {/* LEFT COLUMN */}

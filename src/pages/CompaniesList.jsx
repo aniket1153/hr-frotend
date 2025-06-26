@@ -92,7 +92,7 @@ const handleDeleteCompany = async (id) => {
                 <td>{company.platform || 'N/A'}</td>
                 <td>{company.lastOpeningDate ? new Date(company.lastOpeningDate).toLocaleDateString() : 'N/A'}</td>
                <td>
-  <button onClick={() => handleViewCompany(company._id)}>View</button>
+   <button onClick={() => handleViewCompany(company._id)}>View</button>
  <button onClick={() => handleUpdateCompany(company._id)}>Update</button>
 
   {/* <button onClick={() => handleDeleteCompany(company._id)}>Delete</button> */}

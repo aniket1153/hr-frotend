@@ -119,7 +119,7 @@ const InterviewCalls = () => {
               <th>Position</th>
               <th>Date</th>
               <th>No. of Calls</th>
-              <th>Action</th>
+              {/* <th>Action</th> */}
             </tr>
           </thead>
           <tbody>
@@ -145,7 +145,7 @@ const InterviewCalls = () => {
                   <td>{company.interviewCalls?.length || 0}</td>
                   <td>
                     <div className="button-group">
-                      <button className="view-button" onClick={() => navigate(`/interview-details/${company._id}`)}>View</button>
+                      {/* <button className="view-button" onClick={() => navigate(`/interview-details/${company._id}`)}>View</button> */}
                       {/* <button className="update-button" onClick={() => navigate(`/update-company/${company._id}`)}>Update</button> */}
                     </div>
                   </td>
