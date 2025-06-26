@@ -22,7 +22,8 @@
   margin-bottom: 30px;
 }
 
-.company-info, .job-history {
+.company-info,
+.job-history {
   flex: 1;
   min-width: 280px;
 }
@@ -40,13 +41,15 @@
 .job-history table {
   width: 100%;
   border-collapse: collapse;
-  background-color:#197071;
+  background-color: #197071;
   border-radius: 8px;
   overflow: hidden;
 }
-.tblw{
-    background-color: #079d9f;
+
+.tblw {
+  background-color: #079d9f;
 }
+
 .job-history th,
 .job-history td {
   padding: 8px 12px;
@@ -55,14 +58,16 @@
   border-bottom: 1px solid #197071;
 }
 
+/* Summary Boxes */
 .summary-boxes {
   display: flex;
   gap: 20px;
   margin-bottom: 30px;
+  flex-wrap: wrap;
 }
 
 .summary-boxes .box {
-  flex: 1;
+  flex: 1 1 200px;
   background: #197071;
   padding: 20px;
   border-radius: 12px;
@@ -82,8 +87,80 @@
 }
 
 /* Student Status Sections */
+.student-status-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  justify-content: space-between;
+}
 
+.student-list-card {
+  flex: 1 1 calc(25% - 20px); /* 4 cards in a row */
+  min-width: 280px;
+  box-sizing: border-box;
+  background-color: #068e90;
+  padding: 16px;
+  border-radius: 12px;
+  color: white;
+  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.2);
+  display: flex;
+  flex-direction: column;
+  max-height: 600px;
+}
 
+.student-list-card h4 {
+  margin-bottom: 12px;
+  font-size: 18px;
+  color: white;
+}
+
+.student-list-card input[type="text"] {
+  width: 100%;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  border: 1px solid #045e5f;
+  border-radius: 8px;
+  box-sizing: border-box;
+  outline: none;
+  background-color: #f0fdfa;
+  color: #111827;
+}
+
+.student-list-card table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #197071;
+  color: white;
+  border-radius: 10px;
+  overflow-y: auto;
+  display: block;
+  max-height: 400px;
+}
+
+.student-list-card th,
+.student-list-card td {
+  padding: 10px 8px;
+  text-align: left;
+  border-bottom: 1px solid #1a6b6c;
+  font-size: 14px;
+}
+
+.student-list-card th {
+  background-color: #197071;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.student-list-card td input[type="checkbox"] {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+/* Buttons */
 .submit-report-btn {
   background-color: white !important;
   color: black !important;
@@ -93,10 +170,11 @@
   cursor: pointer;
   transition: background 0.3s ease;
   font-size: 14px;
+  margin-top: auto;
 }
 
 .submit-report-btn:hover {
-  background-color: white;
+  background-color: #e5e5e5 !important;
 }
 
 .update-btn-wrap {
@@ -128,81 +206,22 @@
   color: #dc2626;
 }
 
-/* Prevent Scrollbars on Tables */
-table {
-  overflow: hidden;
-}
-
+/* Table Scrollbar Hidden */
 .student-list-card table::-webkit-scrollbar {
+  width: 0;
+  height: 0;
   display: none;
 }
-.student-status-row {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-top: 20px;
-}
 
-.student-list-card {
-  flex: 1 1 calc(33.33% - 20px); /* Three side-by-side */
-  min-width: 280px;
-  box-sizing: border-box;
-  background-color: #068e90;
-  padding: 16px;
-  border-radius: 12px;
-  color: white;
-  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.2);
-  display: flex;
-  flex-direction: column;
-  max-height: 600px;
-}
-
-.student-list-card h4 {
-  margin-bottom: 12px;
-  font-size: 18px;
-  color: white;
-}
-
-.student-list-card input[type="text"] {
-  width: 100%;
-  padding: 8px 12px;
-  margin-bottom: 12px;
-  font-size: 14px;
-  border: 1px solid #045e5f;
-  border-radius: 8px;
-  box-sizing: border-box;
-  outline: none;
-}
-
-.student-list-card table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #197071;
-  color: white;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.student-list-card th,
-.student-list-card td {
-  padding: 10px 8px;
-  text-align: left;
-  border-bottom: 1px solid #1a6b6c;
-  font-size: 14px;
-}
-
-.student-list-card th {
-  background-color: #197071;
-  font-weight: bold;
-}
-
-.student-list-card td input[type="checkbox"] {
-  transform: scale(1.2);
-}
-
-/* Responsive fix */
-@media (max-width: 900px) {
+/* Responsive */
+@media (max-width: 1200px) {
   .student-list-card {
-    flex: 1 1 100%;
+    flex: 1 1 calc(50% - 20px); /* 2 cards per row */
+  }
+}
+
+@media (max-width: 700px) {
+  .student-list-card {
+    flex: 1 1 100%; /* 1 card per row */
   }
 }

@@ -154,6 +154,15 @@ jobHistory: [
     "openingDate": "2024-12-15"
   }
 ]
+const handleSubmitToApplied = async () => {
+  for (const id of selectedApplied) {
+    await updateStatus(id, 'applied');
+  }
+  toast.success('Students moved to Applied!');
+  setSelectedApplied([]); // Clear selection
+  fetchData(); // Refresh data
+};
+
 
   return (
     <div className="company-details-card">
@@ -214,116 +223,165 @@ jobHistory: [
         </div>
       </div>
 
-      <div className="student-status-row">
-        {/* Applied Students */}
-        <div className="student-list-card">
-          <h4>Applied Students</h4>
-          <input
-            type="text"
-            placeholder="Search"
-            value={searchApplied}
-            onChange={(e) => setSearchApplied(e.target.value)}
-          />
-          <table>
-            <thead>
-              <tr>
-                <th>✔</th>
-                <th>SrNo</th>
-                <th>Name</th>
-              </tr>
-            </thead>
-            <tbody>
-              {appliedStudents
-                .filter((s) => s.name?.toLowerCase().includes(searchApplied.toLowerCase()))
-                .map((student, i) => (
-                  <tr key={student._id}>
-                    <td>
-                      <input
-                        type="checkbox"
-                        checked={selectedApplied.includes(student._id)}
-                        onChange={() => toggleSelection(student._id, 'applied')}
-                      />
-                    </td>
-                    <td>{i + 1}</td>
-                    <td>{student.name}</td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-          <button className="submit-report-btn" onClick={handleSubmitToShortlisted}>
-            Submit to Shortlisted
-          </button>
-        </div>
+  <div className="student-status-row" style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
 
-        {/* Shortlisted Students */}
-        <div className="student-list-card">
-          <h4>Shortlisted Students</h4>
-          <input
-            type="text"
-            placeholder="Search"
-            value={searchShortlisted}
-            onChange={(e) => setSearchShortlisted(e.target.value)}
-          />
-          <table>
-            <thead>
-              <tr>
-                <th>✔</th>
-                <th>SrNo</th>
-                <th>Name</th>
-              </tr>
-            </thead>
-            <tbody>
-              {shortlistedStudents
-                .filter((s) => s.name?.toLowerCase().includes(searchShortlisted.toLowerCase()))
-                .map((student, i) => (
-                  <tr key={student._id}>
-                    <td>
-                      <input
-                        type="checkbox"
-                        checked={selectedShortlisted.includes(student._id)}
-                        onChange={() => toggleSelection(student._id, 'shortlisted')}
-                      />
-                    </td>
-                    <td>{i + 1}</td>
-                    <td>{student.name}</td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-          <button className="submit-report-btn" onClick={handleSubmitToPlaced}>
-            Submit to Placed
-          </button>
-        </div>
+  {/* ✅ All Students */}
+  <div className="student-list-card" style={{ flex: '1 1 300px' }}>
+    <h4>All Students</h4>
+    <input
+      type="text"
+      placeholder="Search"
+      value={searchApplied}
+      onChange={(e) => setSearchApplied(e.target.value)}
+    />
+    <table>
+      <thead>
+        <tr>
+          <th>✔</th>
+          <th>SrNo</th>
+          <th>Name</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {students
+          .filter((s) => s.appliedCompany === companyName)
+          .filter((s) => s.name?.toLowerCase().includes(searchApplied.toLowerCase()))
+          .map((student, i) => (
+            <tr key={student._id}>
+              <td>
+                <input
+                  type="checkbox"
+                  checked={selectedApplied.includes(student._id)}
+                  onChange={() => toggleSelection(student._id, 'applied')}
+                />
+              </td>
+              <td>{i + 1}</td>
+              <td>{student.name}</td>
+              <td style={{ textTransform: 'capitalize' }}>{student.status || 'N/A'}</td>
+            </tr>
+            
+          ))}
+         
 
-        {/* Placed Students */}
-        <div className="student-list-card">
-          <h4>Placed Students</h4>
-          <input
-            type="text"
-            placeholder="Search"
-            value={searchPlaced}
-            onChange={(e) => setSearchPlaced(e.target.value)}
-          />
-          <table>
-            <thead>
-              <tr>
-                <th>SrNo</th>
-                <th>Name</th>
-              </tr>
-            </thead>
-            <tbody>
-              {placedStudents
-                .filter((s) => s.name?.toLowerCase().includes(searchPlaced.toLowerCase()))
-                .map((student, i) => (
-                  <tr key={student._id}>
-                    <td>{i + 1}</td>
-                    <td>{student.name}</td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      </tbody>
+    </table>
+     <button className="submit-report-btn" onClick={handleSubmitToApplied}>
+  Submit to Applied
+</button>
+  </div>
+
+  {/* ✅ Applied Students */}
+  <div className="student-list-card" style={{ flex: '1 1 300px' }}>
+    <h4>Applied Students</h4>
+    <input
+      type="text"
+      placeholder="Search"
+      value={searchApplied}
+      onChange={(e) => setSearchApplied(e.target.value)}
+    />
+    <table>
+      <thead>
+        <tr>
+          <th>✔</th>
+          <th>SrNo</th>
+          <th>Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {appliedStudents
+          .filter((s) => s.name?.toLowerCase().includes(searchApplied.toLowerCase()))
+          .map((student, i) => (
+            <tr key={student._id}>
+              <td>
+                <input
+                  type="checkbox"
+                  checked={selectedApplied.includes(student._id)}
+                  onChange={() => toggleSelection(student._id, 'applied')}
+                />
+              </td>
+              <td>{i + 1}</td>
+              <td>{student.name}</td>
+            </tr>
+          ))}
+      </tbody>
+    </table>
+    <button className="submit-report-btn" onClick={handleSubmitToShortlisted}>
+      Submit to Shortlisted
+    </button>
+  </div>
+
+  {/* ✅ Shortlisted Students */}
+  <div className="student-list-card" style={{ flex: '1 1 300px' }}>
+    <h4>Shortlisted Students</h4>
+    <input
+      type="text"
+      placeholder="Search"
+      value={searchShortlisted}
+      onChange={(e) => setSearchShortlisted(e.target.value)}
+    />
+    <table>
+      <thead>
+        <tr>
+          <th>✔</th>
+          <th>SrNo</th>
+          <th>Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {shortlistedStudents
+          .filter((s) => s.name?.toLowerCase().includes(searchShortlisted.toLowerCase()))
+          .map((student, i) => (
+            <tr key={student._id}>
+              <td>
+                <input
+                  type="checkbox"
+                  checked={selectedShortlisted.includes(student._id)}
+                  onChange={() => toggleSelection(student._id, 'shortlisted')}
+                />
+              </td>
+              <td>{i + 1}</td>
+              <td>{student.name}</td>
+            </tr>
+          ))}
+      </tbody>
+    </table>
+    <button className="submit-report-btn" onClick={handleSubmitToPlaced}>
+      Submit to Placed
+    </button>
+  </div>
+
+  {/* ✅ Placed Students */}
+  <div className="student-list-card" style={{ flex: '1 1 300px' }}>
+    <h4>Placed Students</h4>
+    <input
+      type="text"
+      placeholder="Search"
+      value={searchPlaced}
+      onChange={(e) => setSearchPlaced(e.target.value)}
+    />
+    <table>
+      <thead>
+        <tr>
+          <th>SrNo</th>
+          <th>Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {placedStudents
+          .filter((s) => s.name?.toLowerCase().includes(searchPlaced.toLowerCase()))
+          .map((student, i) => (
+            <tr key={student._id}>
+              <td>{i + 1}</td>
+              <td>{student.name}</td>
+            </tr>
+          ))}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
 
       <div className="update-btn-wrap">
         <button onClick={handleSubmitReport} className="update-btn">
