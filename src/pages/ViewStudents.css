@@ -1,4 +1,133 @@
+/* Tooltip container */
+.tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+}
 
+/* Tooltip text box */
+.tooltip-box {
+  visibility: hidden;
+  opacity: 0;
+  width: 220px;
+  background-color: #ffffff;
+  color: #333;
+  text-align: left;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  z-index: 10;
+  top: 100%;
+  left: 0;
+  margin-top: 6px;
+  transition: opacity 0.3s;
+  font-size: 14px;
+  line-height: 1.5;
+  border: 1px solid #ccc;
+}
+
+/* Show tooltip on hover */
+.tooltip-wrapper:hover .tooltip-box {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Name button (same as earlier) */
+.name-button {
+  background: none;
+  border: none;
+  color: #007b7a;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: underline;
+  padding: 0;
+}
+
+/* Name Button (Student name clickable) */
+.name-button {
+  background: none;
+  border: none;
+  color: black;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: underline;
+  transition: color 0.3s;
+
+}
+
+
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 30px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  color:white;
+  margin-bottom: 20px;
+  font-size: 24px;
+  text-align: center;
+}
+
+.modal-content p {
+  margin: 10px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Close Button */
+.close-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  float: right;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.close-btn:hover {
+  background-color: #c0392b;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 
 /* Container */
 .view-students-container {

@@ -1,6 +1,690 @@
-<td>
-                    <div className="button-group">
-                      {/* <button className="view-button" onClick={() => navigate(`/interview-details/${company._id}`)}>View</button> */}
-                      {/* <button className="update-button" onClick={() => navigate(`/update-company/${company._id}`)}>Update</button> */}
-                    </div>
-                  </td>
+which backedn api you need   import InterviewCall from '../models/InterviewCall.js';
+  import mongoose from 'mongoose';
+  import Position from '../models/Position.js';
+
+  // Create interview call
+  export const createInterviewCall = async (req, res) => {
+    try {
+      const interviewCall = new InterviewCall(req.body);
+      await interviewCall.save();
+      res.status(201).json(interviewCall);
+    } catch (error) {
+      res.status(500).json({ message: 'Error creating interview call', error: error.message });
+    }
+  };
+
+  // Get all interview calls
+
+  export const getInterviewCalls = async (req, res) => {
+  try {
+    const interviewCalls = await InterviewCall.find()
+      .populate('companyId', 'companyName')          // ✅ for company filter
+      .populate('positionId', 'positionName')        // optional
+      .populate('shortlisted', 'name')               // optional
+      .populate('placed', 'name')                    // ✅ needed
+      .populate({ path: 'resumes.student', select: 'name' }) // optional
+      .lean(); // use lean() to simplify objects
+
+    res.json(interviewCalls);
+  } catch (error) {
+    console.error('Error fetching interview calls:', error);
+    res.status(500).json({
+      message: 'Server error fetching interview calls',
+      error: error.message,
+    });
+  }
+};
+
+
+//   try {
+//     const interviewCalls = await InterviewCall.find()
+//       .populate('companyId', 'companyName')
+//       .populate('positionId', 'positionName')
+//       .populate('shortlisted', 'name')
+//       .populate('placed', 'name')
+//       .populate({ path: 'resumes.student', select: 'name' }) // ✅ This is correct for nested population
+//       .lean();
+
+//     res.json(interviewCalls);
+//   } catch (error) {
+//     console.error('Error fetching interview calls:', error);
+//     res.status(500).json({ message: 'Server error fetching interview calls', error: error.message });
+//   }
+// };
+
+
+export const getInterviewDetailsById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = await InterviewCall.findById(id)
+      .populate('companyId', 'companyName')
+      .populate('positionId', 'positionName')
+      .populate('resumes.student', 'name email contact')
+      .populate('shortlisted', 'name')
+      .populate('placed', 'name')
+      .lean();
+
+    if (!data) return res.status(404).json({ message: 'Not found' });
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching interview', error: err.message });
+  }
+};
+export const updateInterviewCall = async (req, res) => {
+  try {
+    const { shortlisted, placed } = req.body;
+    const updated = await InterviewCall.findByIdAndUpdate(
+      req.params.id,
+      { $set: { shortlisted, placed } },
+      { new: true }
+    );
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ message: 'Error updating interview call', error: err.message });
+  }
+};
+
+
+//   try {
+//     console.log('Fetching interview calls...');
+//     const interviewCalls = await InterviewCall.find()
+//       .populate('companyId', 'companyName')
+//       .populate('positionId', 'position')
+//       .populate('studentId', 'name')
+//       .populate('shortlisted', 'name')
+//       .populate('placed', 'name')
+//       .lean();
+
+//     console.log('Interview calls fetched:', interviewCalls.length);
+//     res.json(interviewCalls);
+//   } catch (error) {
+//     console.error('Error fetching interview calls:', error);
+//     res.status(500).json({ message: 'Server error fetching interview calls', error: error.message });
+//   }
+// };
+
+  //       .populate('positionId', 'position')
+  //       .populate('studentId', 'appliedCompany');
+
+  //     res.json({ interviewCalls });
+  //   } catch (error) {
+  //     console.error("Error fetching interview calls:", error);
+  //     res.status(500).json({ message: 'Server error fetching interview calls' });
+  //   }
+  // };
+
+  // Get interview call by ID
+ 
+
+  // Update interview call
+  // export const updateInterviewCall = async (req, res) => {
+  //   const { id } = req.params;
+
+  //   if (!mongoose.Types.ObjectId.isValid(id)) {
+  //     return res.status(400).json({ message: 'Invalid interview call ID' });
+  //   }
+
+  //   try {
+  //     const updatedCall = await InterviewCall.findByIdAndUpdate(id, req.body, {
+  //       new: true,
+  //       runValidators: true,
+  //     });
+
+  //     if (!updatedCall) {
+  //       return res.status(404).json({ message: 'Interview call not found' });
+  //     }
+
+  //     res.json(updatedCall);
+  //   } catch (error) {
+  //     res.status(500).json({ message: 'Error updating interview call', error: error.message });
+  //   }
+  // };
+
+  // Delete interview call
+  export const deleteInterviewCall = async (req, res) => {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid interview call ID' });
+    }
+
+    try {
+      const interviewCall = await InterviewCall.findById(id);
+
+      if (!interviewCall) {
+        return res.status(404).json({ message: 'Interview call not found' });
+      }
+
+      await interviewCall.deleteOne();
+
+      res.json({ message: 'Interview call deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error deleting interview call', error: error.message });
+    }
+  };
+export const getInterviewCallsByStudent = async (req, res) => {
+  const { studentId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(studentId)) {
+    return res.status(400).json({ message: 'Invalid student ID' });
+  }
+
+  try {
+    // Find interview calls where studentId is in the studentId array OR shortlisted OR placed
+    const interviewCalls = await InterviewCall.find({
+      $or: [
+        { studentId: studentId },
+        { shortlisted: studentId },
+        { placed: studentId }
+      ]
+    })
+    .populate('companyId', 'companyName')
+    .populate('positionId', 'position')
+    .populate('studentId', 'name email')  // optional, to get student details in response
+    .lean();
+
+    res.json(interviewCalls);
+  } catch (error) {
+    console.error('Error fetching interview calls by student:', error);
+    res.status(500).json({ message: 'Server error fetching interview calls' });
+  }
+};
+export const getInterviewCallDetails = async (req, res) => {
+  try {
+    const interviewCalls = await InterviewCall.find()
+      .populate("companyId", "companyName")
+      .populate("positionId", "position")
+      .populate("shortlisted", "name email")
+      .populate("placed", "name email");
+
+    res.status(200).json(interviewCalls);
+  } catch (err) {
+    console.error("Error fetching interview call details:", err);
+    res.status(500).json({ message: "Failed to load interview call details" });
+  }
+  
+};
+
+export const getInterviewCallsGroupedByCompany = async (req, res) => {
+  try {
+    const interviewCalls = await InterviewCall.find()
+      .populate('companyId', 'companyName location website')
+      .populate('positionId', 'positionName description')
+      .populate('shortlisted', 'name email')
+      .populate('placed', 'name email')
+      .populate('resumes.student', 'name email');
+
+    const grouped = {};
+
+    interviewCalls.forEach((call) => {
+      const companyName = call.companyId?.companyName || 'Unknown Company';
+
+      if (!grouped[companyName]) {
+        grouped[companyName] = [];
+      }
+
+      grouped[companyName].push({
+        _id: call._id,
+        position: call.positionId
+          ? {
+              name: call.positionId.positionName,
+              description: call.positionId.description,
+            }
+          : null,
+        interviewDate: call.interviewDate,
+        status: call.status || 'Scheduled',
+        description: call.description || '',
+        requirementsCount: call.requirementsCount || 0,
+        resumesSentCount: call.resumes.length,
+        shortlisted: call.shortlisted,
+        placed: call.placed,
+      });
+    });
+
+    res.status(200).json(grouped);
+  } catch (error) {
+    console.error('Error fetching interview calls by company:', error);
+    res.status(500).json({ message: 'Failed to fetch interview calls grouped by company' });
+  }
+};
+
+//   try {
+//     const calls = await InterviewCall.find()
+//       .populate('companyId', 'companyName')
+//       .populate('positionId', 'positionName')
+//       .populate('shortlisted', 'name')
+//       .populate('placed', 'name')
+//       .lean();
+
+//     // Group calls by companyName
+//     const grouped = calls.reduce((acc, call) => {
+//       const company = call.companyId?.companyName || 'Unknown Company';
+//       if (!acc[company]) acc[company] = [];
+//       acc[company].push(call);
+//       return acc;
+//     }, {});
+
+//     res.json(grouped);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching interview calls by company', error: error.message });
+//   }
+// };
+export const updateInterviewStatus = async (req, res) => {
+  const { id } = req.params;
+  const { shortlisted, placed } = req.body;
+
+  try {
+    const updated = await InterviewCall.findByIdAndUpdate(
+      id,
+      { shortlisted, placed },
+      { new: true }
+    );
+
+    // Update student status
+    if (placed?.length) {
+      await Student.updateMany({ _id: { $in: placed } }, { $set: { status: 'placed' } });
+    }
+    if (shortlisted?.length) {
+      await Student.updateMany({ _id: { $in: shortlisted } }, { $set: { status: 'shortlisted' } });
+    }
+
+    res.json({ message: 'Updated successfully', updated });
+  } catch (err) {
+    res.status(500).json({ message: 'Error updating status', error: err.message });
+  }
+};
+export const getInterviewCallById = async (req, res) => {
+  try {
+    const interviewCall = await InterviewCall.findById(req.params.id)
+      .populate('companyId', 'companyName')
+      .populate('positionId', 'positionName')
+      .populate('resumes.student', 'name email phone')
+      .populate('shortlisted', 'name')
+      .populate('placed', 'name');
+
+    if (!interviewCall) {
+      return res.status(404).json({ message: 'Interview call not found' });
+    }
+
+    res.json(interviewCall);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+
+
+
+
+export const getInterviewCallStats = async (req, res) => {
+  try {
+    const { date, month } = req.query;
+    let filter = {};
+
+    if (date) {
+      const start = new Date(date);
+      const end = new Date(date);
+      end.setDate(end.getDate() + 1);
+      filter.createdAt = { $gte: start, $lt: end };
+    } else if (month) {
+      const start = new Date(`${month}-01`);
+      const end = new Date(start);
+      end.setMonth(end.getMonth() + 1);
+      filter.createdAt = { $gte: start, $lt: end };
+    }
+
+    const count = await InterviewCall.countDocuments(filter);
+    res.json({ count });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching interview call stats', error: error.message });
+  }
+};import Company from '../models/Company.js';
+import mongoose from 'mongoose';
+import InterviewCall from '../models/InterviewCall.js';
+
+// Create a new company
+export const createCompany = async (req, res) => {
+  try {
+    const newCompany = new Company(req.body);
+    const saved = await newCompany.save();
+    res.status(201).json(saved);
+  } catch (err) {
+    res.status(500).json({ message: 'Error adding company', error: err.message });
+  }
+};
+
+// Get all companies
+export const getCompanies = async (req, res) => {
+  try {
+    const companies = await Company.find().sort({ createdAt: -1 });
+    res.json(companies);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching companies', error: err.message });
+  }
+};
+
+// Get company by ID
+export const getCompanyById = async (req, res) => {
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: 'Invalid company ID' });
+  }
+
+  try {
+    const company = await Company.findById(id).populate({
+      path: 'positions.placed',
+      model: 'Student',
+      select: 'name email status'
+    });
+
+    if (!company) {
+      return res.status(404).json({ message: `Company not found: ${id}` });
+    }
+
+    res.status(200).json(company);
+  } catch (err) {
+    console.error('Error fetching company:', err);
+    res.status(500).json({ message: 'Server error fetching company' });
+  }
+};
+
+// Update company
+export const updateCompany = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: 'Invalid company ID' });
+  }
+
+  try {
+    const updated = await Company.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
+    if (!updated) return res.status(404).json({ message: 'Company not found' });
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ message: 'Error updating company', error: err.message });
+  }
+};
+
+// Delete company
+export const deleteCompany = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: 'Invalid company ID' });
+  }
+
+  try {
+    const company = await Company.findById(id);
+    if (!company) return res.status(404).json({ message: 'Company not found' });
+
+    await Company.findByIdAndDelete(id);
+    res.json({ message: 'Company removed' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error deleting company', error: err.message });
+  }
+};
+
+// Get companies with their interview calls
+export const getCompaniesWithInterviewCalls = async (req, res) => {
+  try {
+    const companies = await Company.find().lean();
+
+    const companiesWithCalls = await Promise.all(
+      companies.map(async (company) => {
+        const calls = await InterviewCall.find({ companyId: company._id })
+          .populate('positionId', 'positionName')
+          .populate('shortlisted', 'name')
+          .populate('placed', 'name')
+          .lean();
+
+        return { ...company, interviewCalls: calls };
+      })
+    );
+
+    res.json(companiesWithCalls);
+  } catch (error) {
+    console.error('Error fetching companies with calls:', error);
+    res.status(500).json({ message: 'Server error fetching companies with interview calls' });
+  }
+};
+// Update status of a position in a company
+// Update status of a position in a company
+export const updatePositionStatus = async (req, res) => {
+  const { companyId, positionId } = req.params;
+  const { status } = req.body;
+
+  if (!['Closed', 'On-going', 'Hold'].includes(status)) {
+    return res.status(400).json({ message: 'Invalid status value' });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(companyId) || !mongoose.Types.ObjectId.isValid(positionId)) {
+    return res.status(400).json({ message: 'Invalid company or position ID' });
+  }
+
+  try {
+    const company = await Company.findById(companyId);
+    if (!company) return res.status(404).json({ message: 'Company not found' });
+
+    // Find the position subdocument by ID
+    const position = company.positions.id(positionId);
+    if (!position) return res.status(404).json({ message: 'Position not found' });
+
+    // Update status and save
+    position.status = status;
+    await company.save();
+
+    res.status(200).json({ message: 'Status updated successfully', position });
+  } catch (err) {
+    console.error('Error updating position status:', err);
+    res.status(500).json({ message: 'Server error updating position status' });
+  }
+};
+// export const getCompanyStats = async (req, res) => {
+//   try {
+//     const { date, month } = req.query;
+//     let filter = {};
+
+//     if (date) {
+//       const start = new Date(date);
+//       const end = new Date(date);
+//       end.setDate(end.getDate() + 1);
+//       filter.createdAt = { $gte: start, $lt: end };
+//     } else if (month) {
+//       const start = new Date(`${month}-01`);
+//       const end = new Date(start);
+//       end.setMonth(end.getMonth() + 1);
+//       filter.createdAt = { $gte: start, $lt: end };
+//     }
+
+//     const count = await Company.countDocuments(filter);
+//     res.json({ count });
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching company stats', error: error.message });
+//   }
+// };
+
+
+// export const getCompanyStats = async (req, res) => {
+//   try {
+//     const { date, month } = req.query;
+
+//     if (!date && !month) {
+//       return res.status(400).json({ message: 'Missing date or month parameter' });
+//     }
+
+//     let filter = {};
+
+//     if (date) {
+//       const start = new Date(date);
+//       const end = new Date(date);
+//       end.setDate(end.getDate() + 1);
+//       filter.createdAt = { $gte: start, $lt: end };
+//     } else if (month) {
+//       const start = new Date(`${month}-01`);
+//       const end = new Date(start);
+//       end.setMonth(end.getMonth() + 1);
+//       filter.createdAt = { $gte: start, $lt: end };
+//     }
+
+//     const count = await Company.countDocuments(filter);
+//     return res.status(200).json({ count });
+//   } catch (error) {
+//     console.error("Error fetching company stats:", error);
+//     return res.status(500).json({ message: "Server error" });
+//   }
+// };
+
+
+
+// GET /api/companies/stats?date=2025-06-21
+export const getCompanyStats = async (req, res) => {
+  try {
+    const { date, month } = req.query;
+
+    if (date) {
+      const start = new Date(date);
+      const end = new Date(date);
+      end.setHours(23, 59, 59, 999);
+
+      const filter = {
+        positions: {
+          $elemMatch: {
+            openingDate: { $gte: start, $lte: end }
+          }
+        }
+      };
+
+      console.log("Searching for date:", date, filter);
+
+      const result = await Company.find(filter).limit(5);
+      console.log("Matched docs:", result);
+
+      const count = await Company.countDocuments(filter);
+      return res.json({ count });
+    }
+
+    if (month) {
+      const start = new Date(`${month}-01`);
+      const end = new Date(`${month}-31`);
+      end.setHours(23, 59, 59, 999);
+
+      const filter = {
+        positions: {
+          $elemMatch: {
+            openingDate: { $gte: start, $lte: end }
+          }
+        }
+      };
+
+      console.log("Searching for month:", month, filter);
+
+      const result = await Company.find(filter).limit(5);
+      console.log("Matched docs:", result);
+
+      const count = await Company.countDocuments(filter);
+      return res.json({ count });
+    }
+
+    res.status(400).json({ message: "Missing date or month" });
+
+  } catch (err) {
+    console.error("Server error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};import mongoose from 'mongoose';
+
+const InterviewCallSchema = new mongoose.Schema({
+  companyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', required: true },
+  positionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Position', required: true },
+  interviewDate: { type: Date, required: true },
+  description: { type: String },
+  requirementsCount: { type: Number },
+  resumes: [
+    {
+      student: { type: mongoose.Schema.Types.ObjectId, ref: 'Student' },
+      resumeUrl: { type: String }
+    }
+  ],
+  shortlisted: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Student' }],
+  placed: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Student' }],
+  status: { type: String, default: "Scheduled" }
+}, { timestamps: true });
+
+export default mongoose.model('InterviewCall', InterviewCallSchema);   import express from 'express';
+import {
+  createCompany,
+  getCompanies,
+  getCompanyById,
+  updateCompany,
+  deleteCompany,
+  getCompaniesWithInterviewCalls,
+  updatePositionStatus,
+  getCompanyStats
+} from '../controllers/companyController.js';
+
+import { protect, authorizeRoles } from '../middlewares/authMiddleware.js';
+
+const router = express.Router();
+
+// ✅ Place /stats route BEFORE /:id
+router.get('/stats', protect, authorizeRoles('admin', 'super-admin', 'hr'), getCompanyStats);
+
+// Get all companies and create a new company
+router.route('/')
+  .get(protect, authorizeRoles('admin', 'super-admin', 'hr'), getCompanies)
+  .post(protect, authorizeRoles('admin', 'super-admin', 'hr'), createCompany);
+
+// New route: Get companies along with their interview calls
+router.route('/with-interview-calls')
+  .get(protect, authorizeRoles('admin', 'super-admin', 'hr'), getCompaniesWithInterviewCalls);
+
+// Update status of a position in a company
+router.route('/:companyId/positions/:positionId/status')
+  .put(protect, authorizeRoles('admin', 'super-admin', 'hr'), updatePositionStatus);
+
+// 🛑 This MUST come last!
+router.route('/:id')
+  .get(protect, authorizeRoles('admin', 'super-admin', 'hr'), getCompanyById)
+  .put(protect, authorizeRoles('admin', 'super-admin', 'hr'), updateCompany)
+  .delete(protect, authorizeRoles('super-admin'), deleteCompany);
+
+export default router; import express from 'express';
+import {
+  getInterviewCalls,
+  getInterviewCallById,
+  createInterviewCall,
+  updateInterviewCall,
+  deleteInterviewCall,
+  getInterviewCallsByStudent,
+  getInterviewCallDetails,
+  getInterviewCallsGroupedByCompany,
+   getInterviewCallStats
+} from '../controllers/interviewCallController.js';
+
+import { protect } from '../middlewares/authMiddleware.js';
+
+const router = express.Router();
+
+router.use(protect);
+
+router.route('/')
+  .get(getInterviewCalls)
+  .post(createInterviewCall);
+
+router.route('/details').get(getInterviewCallDetails);
+
+router.route('/by-company').get(getInterviewCallsGroupedByCompany);
+
+router.route('/student/:studentId').get(getInterviewCallsByStudent);
+router.get('/stats', getInterviewCallStats);
+router.route('/:id')
+  .get(getInterviewCallById)
+  .put(updateInterviewCall)
+  .delete(deleteInterviewCall);
+
+export default router;
+ 
+
+
+
+

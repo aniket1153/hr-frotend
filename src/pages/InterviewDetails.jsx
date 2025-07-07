@@ -214,7 +214,7 @@ const InterviewDetail = () => {
               <th>Select</th>
               
               <th>Name</th>
-              <th>Contact</th>
+              {/* <th>Contact</th> */}
               
             </tr>
           </thead>
@@ -247,7 +247,7 @@ const InterviewDetail = () => {
                   </td>
                 
                   <td>{student.name}</td>
-                  <td>{student.contact}</td>
+                  {/* <td>{student.contact}</td> */}
                   {/* <td>{student.email}</td> */}
                   {/* <td>
                     {student.resumeUrl ? (

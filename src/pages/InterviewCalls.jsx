@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axiosInstance';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './InterviewCalls.css';
 import { FaPlus } from 'react-icons/fa';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 const InterviewCalls = () => {
   const [companies, setCompanies] = useState([]);
@@ -13,57 +15,50 @@ const InterviewCalls = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setError('❌ Authentication token is missing. Please login.');
-      setLoading(false);
-      return;
-    }
+useEffect(() => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    setError('❌ Authentication token is missing. Please login.');
+    setLoading(false);
+    return;
+  }
 
-    axiosInstance.get('/api/companies', {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(res => {
-        const allCompanies = res.data;
-        const lastCreatedId = localStorage.getItem('lastCreatedCompanyId');
-        const lastUpdatedId = localStorage.getItem('lastUpdatedCompanyId');
+  axiosInstance.get('/api/companies/recent', {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+    .then(res => {
+      const recentCompanies = res.data.companies; // ✅ updated
+      if (recentCompanies && recentCompanies.length > 0) {
+        setCompanies(recentCompanies); // ✅ show all companies
 
-        let finalCompanies = allCompanies;
+        const createdId = localStorage.getItem('lastCreatedCompanyId');
+        const updatedId = localStorage.getItem('lastUpdatedCompanyId');
 
-        if (lastCreatedId || lastUpdatedId) {
-          const highlightId = lastCreatedId || lastUpdatedId;
-          const targetCompany = allCompanies.find(c => c._id === highlightId);
-          if (targetCompany) {
-            finalCompanies = [
-              targetCompany,
-              ...allCompanies.filter(c => c._id !== highlightId)
-            ];
-            setHighlightedCompanyId(highlightId);
-          }
-
-          // Show a toast only for update case
-          if (lastUpdatedId) {
-            toast.success('✅ Company updated successfully!');
-          }
-
-          // Cleanup after 5 seconds
-          setTimeout(() => {
-            localStorage.removeItem('lastCreatedCompanyId');
-            localStorage.removeItem('lastUpdatedCompanyId');
-            setHighlightedCompanyId('');
-          }, 5000);
+        if (createdId || updatedId) {
+          setHighlightedCompanyId(createdId || updatedId);
+          if (createdId) toast.success("✅ Company added successfully!");
+          if (updatedId) toast.success("✅ Company updated successfully!");
         }
 
-        setCompanies(finalCompanies);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("API error:", err.message);
-        setError('⚠️ Failed to fetch interview calls');
-        setLoading(false);
-      });
-  }, []);
+        setTimeout(() => {
+          localStorage.removeItem('lastCreatedCompanyId');
+          localStorage.removeItem('lastUpdatedCompanyId');
+          setHighlightedCompanyId('');
+        }, 5000);
+      } else {
+        setCompanies([]);
+      }
+
+      setLoading(false);
+    })
+    .catch(err => {
+      console.error("API error:", err.message);
+      setError('⚠️ Failed to fetch recent interview calls.');
+      setLoading(false);
+    });
+}, []);
+
+
 
   const handleStatusChange = (companyId, positionId, newStatus) => {
     const token = localStorage.getItem('token');
@@ -119,7 +114,7 @@ const InterviewCalls = () => {
               <th>Position</th>
               <th>Date</th>
               <th>No. of Calls</th>
-              {/* <th>Action</th> */}
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -143,7 +138,12 @@ const InterviewCalls = () => {
                   <td>{firstPosition?.title || 'N/A'}</td>
                   <td>{company.lastOpeningDate ? new Date(company.lastOpeningDate).toLocaleDateString() : 'N/A'}</td>
                   <td>{company.interviewCalls?.length || 0}</td>
-                  
+                   <td>
+                    <div className="button-group">
+                      <button className="view-button" onClick={() => navigate(`/interview-details/${company._id}`)}>View</button> 
+                       <button className="update-button" onClick={() => navigate(`/update-company/${company._id}`)}>Update</button>
+                    </div>
+                  </td> -
                 </tr>
               );
             })}

@@ -68,7 +68,7 @@ const handleDeleteCompany = async (id) => {
 
   return (
     <div className="companies-container">
-      <h1> Companies & Open Positions</h1>
+      <h1> List of Companies </h1>
       {companies.length === 0 ? (
         <p>No companies found.</p>
       ) : (
@@ -93,7 +93,7 @@ const handleDeleteCompany = async (id) => {
                 <td>{company.lastOpeningDate ? new Date(company.lastOpeningDate).toLocaleDateString() : 'N/A'}</td>
                <td>
    <button onClick={() => handleViewCompany(company._id)}>View</button>
- <button onClick={() => handleUpdateCompany(company._id)}>Update</button>
+ {/* <button onClick={() => handleUpdateCompany(company._id)}>Update</button> */}
 
   {/* <button onClick={() => handleDeleteCompany(company._id)}>Delete</button> */}
 </td>
