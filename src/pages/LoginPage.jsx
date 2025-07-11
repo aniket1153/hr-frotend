@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './LoginPage.css';
-import axiosInstance from '../axiosInstance'; // Correct path since file is in src/
+import axiosInstance from '../axiosInstance'; // Adjust if path differs
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -18,12 +18,12 @@ const LoginPage = () => {
 
     try {
       const { data } = await axiosInstance.post('api/auth/login', {
-        username,
+        email,
         password,
       });
 
       localStorage.setItem('token', data.token);
-      localStorage.setItem('username', data.username);
+      localStorage.setItem('email', data.email);
       localStorage.setItem('role', data.role);
 
       toast.success('Login successful!', {
@@ -37,7 +37,7 @@ const LoginPage = () => {
       });
 
       setTimeout(() => {
-        navigate('/admin-home');
+        navigate('/admin-home'); // or conditional nav based on role
       }, 1000);
 
     } catch (error) {
@@ -61,11 +61,11 @@ const LoginPage = () => {
       <h2><u>Login</u></h2>
       <form onSubmit={handleLogin} className="login-form">
         <div className="input-group">
-          <label>Username</label>
+          <label>Email</label>
           <input
-            type="text"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
             required
             disabled={loading}
           />
