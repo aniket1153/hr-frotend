@@ -13,7 +13,7 @@ const CompanyDetails = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+const [searchAll, setSearchAll] = useState('');
   const [searchApplied, setSearchApplied] = useState('');
   const [searchShortlisted, setSearchShortlisted] = useState('');
   const [searchPlaced, setSearchPlaced] = useState('');
@@ -320,9 +320,11 @@ const CompanyDetails = () => {
         </div>
       </div>
 
-      <button className="submit-report-btn report-final-btn" onClick={handleSubmitReport}>
-        Submit Report
+     <div style={{display:"flex",justifyContent:"flex-end"}}>
+       <button className=" one-more" onClick={handleSubmitReport}>
+       Update
       </button>
+     </div>
     </div>
   );
 };

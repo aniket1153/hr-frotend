@@ -21,17 +21,16 @@ import PlacementReport from "./pages/PlacementReport";
 import UpdateCompany from "./pages/UpdateCompany";
 import CreateCompany from "./pages/CreateCompany";
 
-
 function App() {
   return (
     <Router>
       <Routes>
         {/* Public */}
         <Route path="/" element={<LoginPage />} />
-        <Route path="/login" element={<LoginPage />} /> {/* Add this */}
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
+
         {/* Protected routes */}
-        {/* ... your other routes remain the same */}
         <Route
           path="/admin-home"
           element={
@@ -46,7 +45,7 @@ function App() {
           path="/placement"
           element={
             <RequireAuth>
-              <RequireRole allowedRoles={["super-admin", "admin", "hr"]}>
+              <RequireRole allowedRoles={["super-admin", "admin", "hr-admin"]}>
                 <PlacementDashboard />
               </RequireRole>
             </RequireAuth>
@@ -97,7 +96,7 @@ function App() {
           path="/interview-calls"
           element={
             <RequireAuth>
-              <RequireRole allowedRoles={["super-admin", "admin", "hr"]}>
+              <RequireRole allowedRoles={["super-admin", "admin", "hr-admin"]}>
                 <InterviewCalls />
               </RequireRole>
             </RequireAuth>
@@ -107,7 +106,7 @@ function App() {
           path="/interview-details/:id"
           element={
             <RequireAuth>
-              <RequireRole allowedRoles={["super-admin", "admin", "hr"]}>
+              <RequireRole allowedRoles={["super-admin", "admin", "hr-admin"]}>
                 <InterviewDetails />
               </RequireRole>
             </RequireAuth>
@@ -117,7 +116,7 @@ function App() {
           path="/view-students"
           element={
             <RequireAuth>
-              <RequireRole allowedRoles={["super-admin", "admin", "hr"]}>
+              <RequireRole allowedRoles={["super-admin", "admin", "hr-admin"]}>
                 <ViewStudents />
               </RequireRole>
             </RequireAuth>
@@ -143,22 +142,18 @@ function App() {
             </RequireAuth>
           }
         />
-        
-{/* Placement Report Route */}
-<Route
-  path="/placement-report"
-  element={
-    <RequireAuth>
-      <RequireRole allowedRoles={["super-admin", "admin"]}>
-        <PlacementReport />
-      </RequireRole>
-    </RequireAuth>
-  }
-/>
-<Route path="/create-company" element={<CreateCompany />} />
-
-<Route path="/update-company/:id" element={<UpdateCompany />} />
-
+        <Route
+          path="/placement-report"
+          element={
+            <RequireAuth>
+              <RequireRole allowedRoles={["super-admin", "admin"]}>
+                <PlacementReport />
+              </RequireRole>
+            </RequireAuth>
+          }
+        />
+        <Route path="/create-company" element={<CreateCompany />} />
+        <Route path="/update-company/:id" element={<UpdateCompany />} />
       </Routes>
     </Router>
   );

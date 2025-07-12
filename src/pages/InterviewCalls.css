@@ -1,3 +1,11 @@
+/* Global Box Sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Main Container */
 .interview-calls-container {
   background-color: #eaf3f5;
   padding: 30px;
@@ -7,6 +15,7 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Heading */
 .interview-calls-container h1 {
   background-color: #007b7a;
   color: white;
@@ -17,9 +26,17 @@
   font-size: 28px;
 }
 
+/* Wrapper for Responsive Table Scroll */
+.table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
 /* Table Styling */
 .interview-calls-table {
   width: 100%;
+  min-width: 700px; /* Prevent table from squishing */
   border-collapse: collapse;
   border: 2px solid #007b7a;
 }
@@ -72,7 +89,7 @@
   background-color: #005f5f;
 }
 
-/* Update Button - styled differently */
+/* Update Button */
 .update-button {
   background-color: #007b7a;
   color: white;
@@ -85,6 +102,12 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
+
+.update-button:hover {
+  background-color: #d48806;
+}
+
+/* Top Bar */
 .top-bar {
   display: flex;
   justify-content: space-between;
@@ -92,6 +115,7 @@
   margin-bottom: 20px;
 }
 
+/* Add Button */
 .add-btn {
   background-color: #007B7A;
   color: white;
@@ -104,19 +128,9 @@
   align-items: center;
   gap: 8px;
 }
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
 
 .add-btn:hover {
   background-color: #198887;
-}
-
-.update-button:hover {
-  background-color: #d48806;
 }
 
 /* Status Dropdown */
@@ -174,7 +188,7 @@
   background-color: #005f5f;
 }
 
-/* Responsive */
+/* Responsive Styles */
 @media (max-width: 768px) {
   .interview-calls-container {
     padding: 20px;
@@ -184,12 +198,6 @@
   .interview-calls-table td {
     font-size: 14px;
     padding: 10px;
-  }
-
-  .interview-calls-table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
   }
 
   .interview-calls-table td > .button-group {
