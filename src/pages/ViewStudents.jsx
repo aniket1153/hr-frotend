@@ -107,9 +107,10 @@ const ViewStudents = () => {
             <tr key={stu._id || idx}>
               <td>{idx + 1}</td>
               <td>
-                <button className="name-button" onClick={() => handleViewDetails(stu._id)}>
-                  {stu.name || stu.fullName}
-                </button>
+              <button className="name-button" onClick={() => handleViewDetails(stu._id)}>
+  {stu.name || stu.fullName || 'Unnamed Student'}
+</button>
+
               </td>
               <td>{stu.email}</td>
               <td>{stu.contact}</td>

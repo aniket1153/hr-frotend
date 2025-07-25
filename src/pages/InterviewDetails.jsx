@@ -166,7 +166,7 @@ const InterviewDetail = () => {
 
       <div className="company-details">
         <div><strong>Company :</strong> {companyName}</div>
-        <div><strong>Date :</strong> {new Date(company.lastOpeningDate).toLocaleDateString()}</div>
+        <div></div>
       </div>
 
       <div className="job-details">
